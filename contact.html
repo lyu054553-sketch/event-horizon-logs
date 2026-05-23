@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Queue — THE EVENT HORIZON LOGS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9679;</text></svg>">
+</head>
+<body>
+
+  <div class="bg-starfield"></div>
+  <div class="bg-noise"></div>
+  <div class="bg-scanlines"></div>
+  <div class="bg-code-overlay"></div>
+  <div class="scanline-sweep"></div>
+
+  <header class="home-header" style="padding-top:2.5rem;">
+    <div class="lang-toggle">
+      <button onclick="setLang('en')">EN</button>
+      <button onclick="setLang('zh')">中文</button>
+    </div>
+    <h1 class="home-title" data-i18n="site.title">THE EVENT HORIZON LOGS</h1>
+    <nav class="home-nav">
+      <a href="about.html"><span class="nav-main" data-i18n="nav.about">ABOUT ME</span><span class="nav-sub" data-i18n="nav.about_sub">BIO_FUNC()</span></a>
+      <span class="home-nav-sep"></span>
+      <a href="code.html"><span class="nav-main" data-i18n="nav.code">CODE EXPLORATIONS</span><span class="nav-sub" data-i18n="nav.code_sub">REPOS && SNIPPETS</span></a>
+      <span class="home-nav-sep"></span>
+      <a href="index.html"><span class="nav-main" data-i18n="nav.home">HOME</span></a>
+      <span class="home-nav-sep"></span>
+      <a href="contact.html" class="active"><span class="nav-main" data-i18n="nav.contact">CONTACT</span><span class="nav-sub" data-i18n="nav.contact_sub">MESSAGE_QUEUE</span></a>
+    </nav>
+  </header>
+
+  <div class="container" style="padding-top:2.5rem; padding-bottom:4rem;">
+
+    <p class="section-label fade-in" data-i18n="contact.label">// Module: message_queue</p>
+    <h2 class="section-title fade-in" data-i18n="contact.title">Message Queue</h2>
+    <div class="section-line fade-in"></div>
+
+    <div class="grid-2" style="gap:3rem; align-items:start;">
+
+      <div class="fade-in fade-in-delay-1">
+        <div class="terminal-block" style="margin-bottom:1.5rem;">
+          <span class="term-title" data-i18n="contact.term_title">transmit.sh</span>
+          <div class="term-content">
+            <p><span class="term-prompt">$</span> <span class="term-cmd" data-i18n="contact.term_cmd1">mq status</span></p>
+            <br>
+            <p class="term-output" style="color:#4ade80;" data-i18n="contact.term_out1">STATUS: ACCEPTING TRANSMISSIONS</p>
+            <p class="term-output" data-i18n="contact.term_out2">Queue depth: 0 | Latency: <24h</p>
+            <p class="term-output" data-i18n="contact.term_out3">Protocol: Asynchronous human relay</p>
+            <br>
+            <p><span class="term-prompt">$</span> <span class="term-cmd" data-i18n="contact.term_cmd2">mq send --interactive</span></p>
+            <p class="term-output" data-i18n="contact.term_out4">Entering transmission mode...</p>
+            <br>
+            <p><span class="term-prompt">$</span> <span class="cursor-blink"></span></p>
+          </div>
+        </div>
+
+        <form class="card" onsubmit="handleSubmit(event)" style="padding:2rem;">
+          <div class="form-group">
+            <label class="form-label" for="callsign" data-i18n="contact.callsign">Callsign</label>
+            <input type="text" id="callsign" class="form-input" data-i18n-placeholder="contact.callsign_ph" placeholder="your_identifier" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email" data-i18n="contact.email">Transmission Frequency</label>
+            <input type="email" id="email" class="form-input" data-i18n-placeholder="contact.email_ph" placeholder="signal@frequency.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="message" data-i18n="contact.message">Transmission Payload</label>
+            <textarea id="message" class="form-textarea" data-i18n-placeholder="contact.message_ph" placeholder="Begin your transmission..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+            <img src="assets/icons_signal.svg" alt="" style="width:14px; height:14px; opacity:0.8;">
+            <span data-i18n="contact.send">Send Signal</span>
+          </button>
+          <p id="form-status" style="font-size:11px; color:var(--accent); margin-top:0.75rem; text-align:center; display:none;"></p>
+        </form>
+      </div>
+
+      <div class="fade-in fade-in-delay-2" style="position:sticky; top:1.5rem;">
+        <div class="card" style="margin-bottom:1.5rem;">
+          <h3 style="font-family:var(--font-display); font-size:11px; letter-spacing:3px; color:var(--accent); margin-bottom:1.2rem; text-transform:uppercase;" data-i18n="contact.ch_title">Available Channels</h3>
+
+          <a href="https://github.com/lyu054553-sketch" target="_blank" class="channel-link">
+            <img src="assets/icons_github.svg" alt="GitHub">
+            <span data-i18n="contact.ch1">github.com/lyu054553-sketch</span>
+            <span style="margin-left:auto; font-size:9px; color:var(--muted); letter-spacing:1.5px;" data-i18n="contact.ch1_tag">CODE</span>
+          </a>
+          <a href="mailto:lyu054553@gmail.com" class="channel-link">
+            <img src="assets/icons_mail.svg" alt="Email">
+            <span data-i18n="contact.ch2">lyu054553@gmail.com</span>
+            <span style="margin-left:auto; font-size:9px; color:var(--muted); letter-spacing:1.5px;" data-i18n="contact.ch2_tag">DIRECT</span>
+          </a>
+          <a href="#" class="channel-link" style="border-bottom:none;">
+            <img src="assets/icons_wechat.svg" alt="WeChat">
+            <span data-i18n="contact.ch3">WeChat: ly3542872630</span>
+            <span style="margin-left:auto; font-size:9px; color:var(--muted); letter-spacing:1.5px;" data-i18n="contact.ch3_tag">SOCIAL</span>
+          </a>
+        </div>
+
+        <div class="telemetry-panel glow-pulse" style="margin-bottom:1.5rem;">
+          <div class="tp-row">
+            <span class="tp-label" data-i18n="contact.sig1">Signal Status</span>
+            <span class="tp-value" style="color:#4ade80;" data-i18n="contact.sig1_val">Online</span>
+          </div>
+          <div class="tp-row">
+            <span class="tp-label" data-i18n="contact.sig2">Avg Response</span>
+            <span class="tp-value" data-i18n="contact.sig2_val"><24h</span>
+          </div>
+          <div class="tp-row">
+            <span class="tp-label" data-i18n="contact.sig3">Preferred Channel</span>
+            <span class="tp-value" data-i18n="contact.sig3_val">Email</span>
+          </div>
+          <div class="tp-row">
+            <span class="tp-label" data-i18n="contact.sig4">Timezone</span>
+            <span class="tp-value" data-i18n="contact.sig4_val">UTC-5 (EST)</span>
+          </div>
+          <div class="tp-row" style="border:none;">
+            <span class="tp-label" data-i18n="contact.sig5">PGP Key</span>
+            <span class="tp-value" style="font-size:10px;">0xAB3F...7D21</span>
+          </div>
+        </div>
+
+        <div class="terminal-block">
+          <span class="term-title" data-i18n="contact.note_title">note.sh</span>
+          <div class="term-content">
+            <p><span class="term-prompt">$</span> <span class="term-cmd" data-i18n="contact.note_cmd">cat note.txt</span></p>
+            <br>
+            <p class="term-output" data-i18n="contact.note1">Open to collaboration on:</p>
+            <p class="term-output" data-i18n="contact.note2">• Astrophotography projects</p>
+            <p class="term-output" data-i18n="contact.note3">• Open source tools</p>
+            <p class="term-output" data-i18n="contact.note4">• Science communication</p>
+            <p class="term-output" data-i18n="contact.note5">• Speaking at events</p>
+            <br>
+            <p class="term-output" style="font-style:italic; color:var(--muted);" data-i18n="contact.note6">"The universe is not only</p>
+            <p class="term-output" style="font-style:italic; color:var(--muted);" data-i18n="contact.note7"> queerer than we suppose,</p>
+            <p class="term-output" style="font-style:italic; color:var(--muted);" data-i18n="contact.note8"> but queerer than we</p>
+            <p class="term-output" style="font-style:italic; color:var(--muted);" data-i18n="contact.note9"> CAN suppose."</p>
+            <p class="term-comment">— J.B.S. Haldane</p>
+            <br>
+            <p><span class="term-prompt">$</span> <span class="cursor-blink"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p data-i18n="footer">THE EVENT HORIZON LOGS — 2026 — TRANSMITTED FROM THE EDGE OF SPACETIME</p>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const status = document.getElementById('form-status');
+      status.style.display = 'block';
+      status.textContent = t('contact.sent');
+      status.style.color = '#4ade80';
+      e.target.reset();
+      setTimeout(() => { status.style.display = 'none'; }, 4000);
+    }
+  </script>
+</body>
+</html>
