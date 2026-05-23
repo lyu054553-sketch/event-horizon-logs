@@ -1361,30 +1361,107 @@ body {
 }
 
 @media (max-width: 600px) {
-  .home-hero {
-    padding-top: 8rem;
-    min-height: auto;
+  /* Header */
+  .home-page .home-header {
+    position: relative;
+    padding-top: 1.5rem !important;
   }
-  .home-cards {
-    grid-template-columns: 1fr;
-    padding: 0 1rem;
-    margin-top: 2rem;
+  .home-header {
+    padding-top: 1.5rem !important;
   }
+  .home-title {
+    font-size: 1rem;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+  }
+  .lang-toggle {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Nav */
   .home-nav {
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.2rem;
   }
   .home-nav a {
     flex-direction: row;
     gap: 0.5rem;
-    padding: 0.35rem 0.8rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 9px;
   }
-  .home-nav a .nav-sub { margin-top: 0; }
-  .home-astronaut { bottom: 25%; width: 30px; }
-  .home-identity { padding: 1.5rem 1rem; }
-  .home-title { letter-spacing: 4px; margin-bottom: 1.2rem; }
-  .identity-boot { max-width: 280px; }
-  .identity-boot .boot-line { font-size: 9px; }
-  .identity-tags .id-tag { font-size: 8px; letter-spacing: 2px; }
+  .home-nav a .nav-main { font-size: 10px; }
+  .home-nav a .nav-sub { margin-top: 0; font-size: 7px; }
+  .home-nav-sep { display: none; }
+
+  /* Hero */
+  .home-hero {
+    padding-top: 2rem;
+    min-height: auto;
+    padding-bottom: 1.5rem;
+  }
+
+  /* Identity */
+  .home-identity {
+    padding: 1rem;
+  }
+  .identity-boot {
+    max-width: 260px;
+    margin-bottom: 1.2rem;
+  }
+  .identity-boot .boot-line {
+    font-size: 9px;
+    line-height: 1.8;
+  }
+  .identity-name .name-en {
+    font-size: clamp(2.5rem, 15vw, 4rem);
+    letter-spacing: 0.15em;
+  }
+  .identity-name .name-zh {
+    font-size: clamp(0.85rem, 4vw, 1.2rem);
+    letter-spacing: 0.3em;
+  }
+  .identity-role .role-line {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+  }
+  .identity-tags {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .identity-tags .id-tag {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+  }
+
+  /* Cards */
+  .home-cards {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+    margin-top: 1.5rem;
+    gap: 0.8rem;
+  }
+  .home-card {
+    padding: 1rem;
+  }
+
+  /* About page */
+  .about-tags {
+    gap: 0.3rem;
+  }
+  .about-tag {
+    font-size: 8px;
+    padding: 0.2rem 0.5rem;
+    letter-spacing: 1px;
+  }
+
+  /* Backgrounds */
+  .home-astronaut { display: none; }
+  .bg-code-overlay::before,
+  .bg-code-overlay::after { display: none; }
 }
