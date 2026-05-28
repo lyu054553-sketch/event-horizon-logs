@@ -2,6 +2,185 @@
 (function () {
   'use strict';
 
+  // ── LetterGlitch Canvas (adapted from react-bits) ──
+  function initLetterGlitch() {
+    const canvas = document.createElement('canvas');
+    canvas.className = 'letter-glitch-canvas';
+    document.body.prepend(canvas);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const glitchColors = ['#0A1520', '#1A2E40', '#4A8DB7', '#2B4A6B'];
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789'.split('');
+    const fontSize = 16;
+    const charWidth = 10;
+    const charHeight = 20;
+    let letters = [];
+    let grid = { columns: 0, rows: 0 };
+    let lastGlitchTime = Date.now();
+    const glitchSpeed = 60;
+    let animFrame;
+
+    function getRandomChar() { return chars[Math.floor(Math.random() * chars.length)]; }
+    function getRandomColor() { return glitchColors[Math.floor(Math.random() * glitchColors.length)]; }
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => r + r + g + g + b + b);
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
+    }
+
+    function interpolateColor(start, end, factor) {
+      return `rgb(${Math.round(start.r + (end.r - start.r) * factor)},${Math.round(start.g + (end.g - start.g) * factor)},${Math.round(start.b + (end.b - start.b) * factor)})`;
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      grid.columns = Math.ceil(w / charWidth);
+      grid.rows = Math.ceil(h / charHeight);
+      const total = grid.columns * grid.rows;
+      letters = Array.from({ length: total }, () => ({
+        char: getRandomChar(),
+        color: getRandomColor(),
+        targetColor: getRandomColor(),
+        colorProgress: 1
+      }));
+      drawLetters();
+    }
+
+    function drawLetters() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      ctx.clearRect(0, 0, w, h);
+      ctx.font = fontSize + 'px monospace';
+      ctx.textBaseline = 'top';
+      letters.forEach((letter, i) => {
+        const x = (i % grid.columns) * charWidth;
+        const y = Math.floor(i / grid.columns) * charHeight;
+        ctx.fillStyle = letter.color;
+        ctx.fillText(letter.char, x, y);
+      });
+    }
+
+    function updateLetters() {
+      const count = Math.max(1, Math.floor(letters.length * 0.03));
+      for (let i = 0; i < count; i++) {
+        const idx = Math.floor(Math.random() * letters.length);
+        letters[idx].char = getRandomChar();
+        letters[idx].targetColor = getRandomColor();
+        letters[idx].colorProgress = 0;
+      }
+    }
+
+    function handleSmoothTransitions() {
+      let needsRedraw = false;
+      letters.forEach(letter => {
+        if (letter.colorProgress < 1) {
+          letter.colorProgress = Math.min(1, letter.colorProgress + 0.05);
+          const startRgb = hexToRgb(letter.color);
+          const endRgb = hexToRgb(letter.targetColor);
+          if (startRgb && endRgb) {
+            letter.color = interpolateColor(startRgb, endRgb, letter.colorProgress);
+            needsRedraw = true;
+          }
+        }
+      });
+      if (needsRedraw) drawLetters();
+    }
+
+    function animate() {
+      const now = Date.now();
+      if (now - lastGlitchTime >= glitchSpeed) {
+        updateLetters();
+        drawLetters();
+        lastGlitchTime = now;
+      }
+      handleSmoothTransitions();
+      animFrame = requestAnimationFrame(animate);
+    }
+
+    resize();
+    animate();
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        cancelAnimationFrame(animFrame);
+        resize();
+        animate();
+      }, 100);
+    });
+  }
+
+  // ── DecryptedText (adapted from react-bits) ──
+  function decryptText(element, text, options) {
+    const speed = options.speed || 40;
+    const maxIterations = options.maxIterations || 8;
+    const sequential = options.sequential !== undefined ? options.sequential : true;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+';
+    const encryptedClass = options.encryptedClassName || 'char-encrypted';
+    const revealedClass = options.revealedClassName || 'char-revealed';
+    const onComplete = options.onComplete;
+
+    const availableChars = chars.split('');
+    const revealedIndices = new Set();
+    let currentIteration = 0;
+    let orderIndex = 0;
+    const order = [];
+    if (sequential) {
+      for (let i = 0; i < text.length; i++) order.push(i);
+    }
+
+    function shuffleText() {
+      return text.split('').map((char, i) => {
+        if (char === ' ') return ' ';
+        if (revealedIndices.has(i)) return text[i];
+        return availableChars[Math.floor(Math.random() * availableChars.length)];
+      }).join('');
+    }
+
+    function render(displayStr) {
+      element.innerHTML = displayStr.split('').map((char, i) => {
+        const cls = revealedIndices.has(i) ? revealedClass : encryptedClass;
+        return `<span class="${cls}">${char === ' ' ? '&nbsp;' : char}</span>`;
+      }).join('');
+    }
+
+    render(shuffleText());
+
+    const interval = setInterval(() => {
+      if (sequential) {
+        if (orderIndex < order.length) {
+          revealedIndices.add(order[orderIndex]);
+          orderIndex++;
+          render(shuffleText());
+        } else {
+          clearInterval(interval);
+          render(text);
+          if (onComplete) onComplete();
+        }
+      } else {
+        render(shuffleText());
+        currentIteration++;
+        if (currentIteration >= maxIterations) {
+          clearInterval(interval);
+          render(text);
+          if (onComplete) onComplete();
+        }
+      }
+    }, speed);
+  }
+
   // ── Star Particle Canvas ──
   function initStarfield() {
     const canvas = document.createElement('canvas');
@@ -60,14 +239,34 @@
     // Set data-text for glitch effect
     nameEn.setAttribute('data-text', nameEn.textContent);
 
-    // Boot sequence: show lines one by one
+    // Boot sequence: decrypt each line (adapted from react-bits DecryptedText)
+    let lineDelay = 300;
+    const lineDuration = 500; // time for each line's decryption
+
     bootLines.forEach((line, i) => {
-      const delay = parseInt(line.dataset.delay) || i * 600;
-      setTimeout(() => line.classList.add('visible'), delay + 300);
+      const cmdEl = line.querySelector('.boot-cmd');
+      const originalText = cmdEl ? cmdEl.textContent : '';
+
+      // Show the line
+      setTimeout(() => {
+        line.classList.add('visible');
+        if (cmdEl && originalText) {
+          // Start decryption animation
+          cmdEl.textContent = '';
+          decryptText(cmdEl, originalText, {
+            speed: 30,
+            sequential: true,
+            encryptedClassName: 'char-encrypted',
+            revealedClassName: 'char-revealed'
+          });
+        }
+      }, lineDelay);
+
+      lineDelay += lineDuration + 200;
     });
 
     // After boot, reveal name
-    const bootEnd = bootLines.length * 600 + 800;
+    const bootEnd = lineDelay + 400;
     setTimeout(() => {
       nameEn.classList.add('revealed');
       nameEn.classList.add('glitch');
@@ -268,6 +467,7 @@
 
   // ── Init All ──
   document.addEventListener('DOMContentLoaded', () => {
+    initLetterGlitch();
     initStarfield();
     initIdentityReveal();
     initTerminalTyping();

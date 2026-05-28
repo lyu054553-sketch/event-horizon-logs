@@ -102,6 +102,15 @@ body {
   opacity: 0.06;
 }
 
+/* ── LetterGlitch Canvas (adapted from react-bits) ── */
+.letter-glitch-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.06;
+}
+
 /* ── Scanline Animation ── */
 @keyframes scanline {
   0% { transform: translateY(-100%); }
@@ -873,6 +882,29 @@ body {
   text-transform: uppercase;
   margin-bottom: 1.8rem;
   text-shadow: 0 0 40px rgba(74,141,183,0.25);
+  position: relative;
+  display: inline-block;
+}
+
+/* GlitchText on title (adapted from react-bits) */
+.home-title.glitch::before,
+.home-title.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--text-bright);
+}
+.home-title.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 rgba(255, 60, 60, 0.3);
+  animation: glitch-clip-path 4s infinite linear alternate-reverse;
+}
+.home-title.glitch::after {
+  left: -2px;
+  text-shadow: 2px 0 rgba(74, 183, 220, 0.3);
+  animation: glitch-clip-path 3s infinite linear alternate-reverse;
 }
 
 /* ── Home Navigation ── */
@@ -994,6 +1026,19 @@ body {
   color: #5abf7b;
 }
 
+/* DecryptedText character styles */
+.boot-cmd .char-encrypted {
+  color: rgba(74, 141, 183, 0.35);
+  font-weight: 400;
+}
+.boot-cmd .char-revealed {
+  color: var(--muted);
+  font-weight: 500;
+}
+.identity-boot .boot-line:last-child .boot-cmd .char-revealed {
+  color: #5abf7b;
+}
+
 /* Name display */
 .identity-name {
   margin-bottom: 1.2rem;
@@ -1034,36 +1079,29 @@ body {
   }
 }
 
-/* Glitch on name */
-.identity-name .name-en.glitch::before,
-.identity-name .name-en.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-  background: inherit;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.identity-name .name-en.glitch::before {
-  opacity: 0.7;
-  animation: nameGlitch1 5s infinite linear alternate-reverse;
-  clip-path: inset(0 0 60% 0);
-  filter: drop-shadow(0 0 8px rgba(74,141,183,0.6));
-}
-.identity-name .name-en.glitch::after {
-  opacity: 0.5;
-  animation: nameGlitch2 4s infinite linear alternate-reverse;
-  clip-path: inset(55% 0 0 0);
-  filter: drop-shadow(0 0 8px rgba(120,140,160,0.5));
-}
-
-/* Neon flicker overlay */
-.identity-name .name-en.glitch {
-  animation: neonBreath 3s ease-in-out infinite, neonFlicker 6s infinite;
+/* ── GlitchText (adapted from react-bits) ── */
+@keyframes glitch-clip-path {
+  0%   { clip-path: inset(20% 0 50% 0); }
+  5%   { clip-path: inset(10% 0 60% 0); }
+  10%  { clip-path: inset(15% 0 55% 0); }
+  15%  { clip-path: inset(25% 0 35% 0); }
+  20%  { clip-path: inset(30% 0 40% 0); }
+  25%  { clip-path: inset(40% 0 20% 0); }
+  30%  { clip-path: inset(10% 0 60% 0); }
+  35%  { clip-path: inset(15% 0 55% 0); }
+  40%  { clip-path: inset(25% 0 35% 0); }
+  45%  { clip-path: inset(30% 0 40% 0); }
+  50%  { clip-path: inset(20% 0 50% 0); }
+  55%  { clip-path: inset(10% 0 60% 0); }
+  60%  { clip-path: inset(15% 0 55% 0); }
+  65%  { clip-path: inset(25% 0 35% 0); }
+  70%  { clip-path: inset(30% 0 40% 0); }
+  75%  { clip-path: inset(40% 0 20% 0); }
+  80%  { clip-path: inset(20% 0 50% 0); }
+  85%  { clip-path: inset(10% 0 60% 0); }
+  90%  { clip-path: inset(15% 0 55% 0); }
+  95%  { clip-path: inset(25% 0 35% 0); }
+  100% { clip-path: inset(30% 0 40% 0); }
 }
 
 @keyframes neonFlicker {
@@ -1079,27 +1117,43 @@ body {
   72% { opacity: 1; }
 }
 
-@keyframes nameGlitch1 {
-  0%, 93% { transform: translate(0); }
-  94% { transform: translate(-4px, 2px); }
-  95% { transform: translate(3px, -1px); }
-  96% { transform: translate(-2px, 1px); }
-  97% { transform: translate(0); }
+/* Glitch on name — enhanced with clip-path (react-bits GlitchText) */
+.identity-name .name-en.glitch::before,
+.identity-name .name-en.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  background: inherit;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-@keyframes nameGlitch2 {
-  0%, 91% { transform: translate(0); }
-  92% { transform: translate(3px, -2px); }
-  93% { transform: translate(-4px, 1px); }
-  94% { transform: translate(2px, 2px); }
-  95% { transform: translate(0); }
-}
-
-/* Neon flicker for glitch pseudo-elements */
 .identity-name .name-en.glitch::before {
-  animation: nameGlitch1 5s infinite linear alternate-reverse, neonFlicker 5s infinite 0.5s;
+  left: 3px;
+  text-shadow: -3px 0 rgba(255, 60, 60, 0.4);
+  animation: glitch-clip-path 3s infinite linear alternate-reverse;
+  filter: drop-shadow(0 0 8px rgba(74,141,183,0.6));
 }
 .identity-name .name-en.glitch::after {
-  animation: nameGlitch2 4s infinite linear alternate-reverse, neonFlicker 4s infinite 1s;
+  left: -3px;
+  text-shadow: 3px 0 rgba(74, 183, 220, 0.4);
+  animation: glitch-clip-path 2s infinite linear alternate-reverse;
+  filter: drop-shadow(0 0 8px rgba(120,140,160,0.5));
+}
+
+/* Neon flicker overlay */
+.identity-name .name-en.glitch {
+  animation: neonBreath 3s ease-in-out infinite, neonFlicker 6s infinite;
+}
+
+.identity-name .name-en.glitch::before {
+  animation: glitch-clip-path 3s infinite linear alternate-reverse, neonFlicker 5s infinite 0.5s;
+}
+.identity-name .name-en.glitch::after {
+  animation: glitch-clip-path 2s infinite linear alternate-reverse, neonFlicker 4s infinite 1s;
 }
 
 /* Chinese name — neon glow */
