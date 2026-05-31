@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { useI18n } from '../i18n';
 import LeoMark from '../components/LeoMark';
@@ -83,19 +84,24 @@ function TelemetryPanel({ rows }: { rows: { label: string; value: string; color?
 
 export default function About() {
   const { t } = useI18n();
+  const [bgLoaded, setBgLoaded] = useState(false);
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh' }}>
       {/* Background image */}
-      <div
+      <img
+        src="/assets/backgrounds_about_dark_space.png"
+        alt=""
+        onLoad={() => setBgLoaded(true)}
         style={{
           position: 'fixed',
           inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
           zIndex: -1,
-          backgroundImage: 'url(/assets/backgrounds_about_dark_space.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          opacity: bgLoaded ? 1 : 0,
+          transition: 'opacity 0.8s ease',
         }}
       />
       {/* Vignette overlay */}

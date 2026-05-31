@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { useI18n } from '../i18n';
 
@@ -8,19 +9,24 @@ const projects = [
 
 export default function Code() {
   const { t } = useI18n();
+  const [bgLoaded, setBgLoaded] = useState(false);
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh' }}>
       {/* Background image */}
-      <div
+      <img
+        src="/assets/backgrounds_code_dark_space_v2.png"
+        alt=""
+        onLoad={() => setBgLoaded(true)}
         style={{
           position: 'fixed',
           inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
           zIndex: -1,
-          backgroundImage: 'url(/assets/backgrounds_code_dark_space_v2.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          opacity: bgLoaded ? 1 : 0,
+          transition: 'opacity 0.8s ease',
         }}
       />
       {/* Vignette overlay */}

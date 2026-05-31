@@ -6,6 +6,7 @@ export default function Contact() {
   const { t } = useI18n();
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
+  const [bgLoaded, setBgLoaded] = useState(false);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,15 +34,19 @@ export default function Contact() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh' }}>
       {/* Background image */}
-      <div
+      <img
+        src="/assets/backgrounds_contact_dark_space_v2.png"
+        alt=""
+        onLoad={() => setBgLoaded(true)}
         style={{
           position: 'fixed',
           inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
           zIndex: -1,
-          backgroundImage: 'url(/assets/backgrounds_contact_dark_space_v2.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          opacity: bgLoaded ? 1 : 0,
+          transition: 'opacity 0.8s ease',
         }}
       />
       {/* Vignette overlay */}
