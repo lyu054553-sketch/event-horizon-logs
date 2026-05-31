@@ -6,14 +6,15 @@ function TerminalBlock({ title, children }: { title: string; children: React.Rea
   return (
     <div
       style={{
-        background: 'rgba(5, 10, 15, 0.9)',
-        border: '1px solid var(--color-border)',
-        borderRadius: 3,
+        background: 'rgba(5, 10, 15, 0.65)',
+        border: '1px solid rgba(160, 180, 200, 0.16)',
+        borderRadius: 20,
         padding: '1.5rem',
         fontSize: 13,
         lineHeight: 1.8,
         position: 'relative',
         marginBottom: '1.5rem',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
       }}
     >
       <div
@@ -23,7 +24,7 @@ function TerminalBlock({ title, children }: { title: string; children: React.Rea
           height: 28,
           background: 'rgba(8,14,20,0.8)',
           borderBottom: '1px solid var(--color-border)',
-          borderRadius: '3px 3px 0 0',
+          borderRadius: '20px 20px 0 0',
         }}
       />
       <span
@@ -48,11 +49,14 @@ function TelemetryPanel({ rows }: { rows: { label: string; value: string; color?
     <div
       className="glow-pulse"
       style={{
-        background: 'var(--color-bg-card)',
-        border: '1px solid var(--color-border)',
-        borderRadius: 3,
+        background: 'rgba(5, 10, 15, 0.55)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        border: '1px solid rgba(160, 180, 200, 0.16)',
+        borderRadius: 20,
         padding: '1rem',
         fontSize: 11,
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
       }}
     >
       {rows.map((row, i) => (
@@ -81,7 +85,30 @@ export default function About() {
   const { t } = useI18n();
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 4rem' }}>
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
+      {/* Background image */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: -1,
+          backgroundImage: 'url(/assets/backgrounds_about_dark_space.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+      {/* Vignette overlay */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: -1,
+          background: 'radial-gradient(ellipse at center, transparent 30%, rgba(3,7,11,0.7) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 4rem' }}>
       <p style={{ fontFamily: 'var(--font-display)', fontSize: 10, letterSpacing: 4, textTransform: 'uppercase', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>
         {t('about.label')}
       </p>
@@ -186,6 +213,7 @@ export default function About() {
           </TerminalBlock>
         </motion.div>
       </div>
+    </div>
     </div>
   );
 }

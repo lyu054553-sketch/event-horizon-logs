@@ -2,15 +2,38 @@ import { motion } from 'motion/react';
 import { useI18n } from '../i18n';
 
 const projects = [
-  { title: 'Medical Companion · 安心陪诊', desc: '一人就医，双向安心。全流程陪诊服务产品页面，包含用户痛点分析、服务流程、功能演示与竞品对比。', tags: ['Web', 'Landing Page', 'Healthcare'], status: 'Active', statusColor: '#4ade80', thumb: '/assets/thumbnails_medical_companion.png', link: 'medical-companion.html' },
-  { title: 'Web3 Resource Hub · 学习资源大全', desc: '精选全球80+优质Web3学习资源，覆盖入门、DeFi、安全、钱包、工具等8大分类，中英双语，支持搜索与筛选。', tags: ['Web3', 'Resource', 'Education'], status: 'Active', statusColor: '#4ade80', thumb: '/assets/thumbnails_web3_hub.png', link: 'web3-hub.html' },
+  { title: 'Medical Companion · 安心陪诊', desc: '一人就医，双向安心。全流程陪诊服务产品页面，包含用户痛点分析、服务流程、功能演示与竞品对比。', tags: ['Web', 'Landing Page', 'Healthcare'], status: 'Active', statusColor: '#4ade80', thumb: '/assets/thumbnails_medical_companion.png', link: '#' },
+  { title: 'Web3 Resource Hub · 学习资源大全', desc: '精选全球80+优质Web3学习资源，覆盖入门、DeFi、安全、钱包、工具等8大分类，中英双语，支持搜索与筛选。', tags: ['Web3', 'Resource', 'Education'], status: 'Active', statusColor: '#4ade80', thumb: '/assets/thumbnails_web3_hub.png', link: '#' },
 ];
 
 export default function Code() {
   const { t } = useI18n();
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 4rem' }}>
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
+      {/* Background image */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: -1,
+          backgroundImage: 'url(/assets/backgrounds_code_dark_space_v2.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+      {/* Vignette overlay */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: -1,
+          background: 'radial-gradient(ellipse at center, transparent 30%, rgba(3,7,11,0.7) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 4rem' }}>
       <p style={{ fontFamily: 'var(--font-display)', fontSize: 10, letterSpacing: 4, textTransform: 'uppercase', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>
         {t('code.label')}
       </p>
@@ -31,19 +54,21 @@ export default function Code() {
             transition={{ delay: i * 0.15, duration: 0.6 }}
             whileHover={{ y: -3, boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 20px var(--color-accent-glow)' }}
             style={{
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 3,
+              background: 'rgba(5, 10, 15, 0.55)',
+              border: '1px solid rgba(160, 180, 200, 0.16)',
+              borderRadius: 20,
               padding: '1.5rem',
-              backdropFilter: 'blur(6px)',
+              backdropFilter: 'blur(24px) saturate(1.4)',
+              WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
               transition: 'all 0.35s ease',
               cursor: 'pointer',
+              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
             }}
           >
             <img
               src={project.thumb}
               alt={project.title}
-              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', borderRadius: 2, border: '1px solid var(--color-border)', marginBottom: '1rem' }}
+              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', borderRadius: 14, border: '1px solid rgba(160, 180, 200, 0.16)', marginBottom: '1rem' }}
             />
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
               <span
@@ -110,6 +135,7 @@ export default function Code() {
           </motion.div>
         ))}
       </div>
+    </div>
     </div>
   );
 }

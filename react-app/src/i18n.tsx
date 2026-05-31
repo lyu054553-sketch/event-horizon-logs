@@ -94,7 +94,7 @@ const I18N: Record<string, Record<string, string>> = {
     'contact.sig3': 'Preferred Channel',
     'contact.sig3_val': 'Email',
     'contact.sig4': 'Timezone',
-    'contact.sig4_val': 'UTC-5 (EST)',
+    'contact.sig4_val': 'UTC+8 (CST)',
     'contact.sig5': 'PGP Key',
     'contact.note1': 'Open to collaboration on:',
     'contact.note2': '• Astrophotography projects',

@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useI18n } from '../i18n';
 import LeoMark from '../components/LeoMark';
 import Starfield from '../components/Starfield';
+import Navbar from '../components/Navbar';
+import { useI18n } from '../i18n';
 
 export default function Home() {
-  const { t, lang, setLang } = useI18n();
-  const location = useLocation();
+  const { t } = useI18n();
   const [bgLoaded, setBgLoaded] = useState(false);
   const [titleLoaded, setTitleLoaded] = useState(false);
   const [cardsLoaded, setCardsLoaded] = useState(false);
@@ -38,8 +37,6 @@ export default function Home() {
     transform: `translate(${mousePos.x * factor}px, ${mousePos.y * factor}px)`,
   });
 
-  const isActive = (path: string) => location.pathname === path;
-
   return (
     <div
       ref={containerRef}
@@ -58,56 +55,9 @@ export default function Home() {
       <div className="home-horizon-line" />
 
       {/* Header */}
-      <header className="home-header" style={{ animation: 'fadeInUp 0.8s ease forwards' }}>
-        <div className="home-logo">{'<OBSERVER/>'}</div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '48px' }}>
-          {/* Language toggle */}
-          <div className="home-lang-toggle">
-            <button
-              className="home-lang-btn"
-              onClick={() => setLang('en')}
-              style={{
-                background: lang === 'en' ? 'rgba(100, 190, 230, 0.12)' : 'transparent',
-                color: lang === 'en' ? 'var(--color-text-bright)' : 'var(--color-muted)',
-              }}
-            >
-              EN
-            </button>
-            <button
-              className="home-lang-btn"
-              onClick={() => setLang('zh')}
-              style={{
-                background: lang === 'zh' ? 'rgba(100, 190, 230, 0.12)' : 'transparent',
-                color: lang === 'zh' ? 'var(--color-text-bright)' : 'var(--color-muted)',
-                borderLeft: '1px solid var(--color-border)',
-              }}
-            >
-              中文
-            </button>
-          </div>
-
-          {/* Navigation */}
-          <nav className="home-nav">
-            {[
-              { path: '/', label: t('nav.home'), sub: 'HOME' },
-              { path: '/about', label: t('nav.about'), sub: 'BIO_FUNC()' },
-              { path: '/code', label: t('nav.code'), sub: 'REPOS && SNIPPETS' },
-              { path: '/contact', label: t('nav.contact'), sub: 'MESSAGE_QUEUE' },
-            ].map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`home-nav-item ${isActive(item.path) ? 'active' : ''}`}
-                style={{ color: isActive(item.path) ? 'var(--color-text-bright)' : 'var(--color-muted)' }}
-              >
-                <span className="home-nav-label">{item.label}</span>
-                <span className="home-nav-sub">{item.sub}</span>
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </header>
+      <div style={{ animation: 'fadeInUp 0.8s ease forwards' }}>
+        <Navbar />
+      </div>
 
       {/* Left side info */}
       <div
@@ -214,9 +164,9 @@ export default function Home() {
           style={{ transitionDelay: '0.1s' }}
         >
           <div className="home-card-number">01</div>
-          <div className="home-card-category">/ 近期项目</div>
-          <div className="home-card-title">Python 黑洞渲染优化</div>
-          <div className="home-card-subtitle">优化计算流程与渲染管线</div>
+          <div className="home-card-category">/ {t('home.card1.tag1')}</div>
+          <div className="home-card-title">{t('home.card1.title')}</div>
+          <div className="home-card-subtitle">{t('home.card1.time')}</div>
           <div className="home-card-arrow">→</div>
         </div>
 
@@ -226,9 +176,9 @@ export default function Home() {
           style={{ transitionDelay: '0.3s' }}
         >
           <div className="home-card-number">02</div>
-          <div className="home-card-category">/ 代码片段</div>
-          <div className="home-card-title">用 10 行代码模拟宇宙膨胀</div>
-          <div className="home-card-subtitle">模拟暗能量驱动的宇宙加速膨胀</div>
+          <div className="home-card-category">/ {t('home.card2.tag1')}</div>
+          <div className="home-card-title">{t('home.card2.title')}</div>
+          <div className="home-card-subtitle">{t('home.card2.time')}</div>
           <div className="home-card-arrow">→</div>
         </div>
 
@@ -238,13 +188,13 @@ export default function Home() {
           style={{ transitionDelay: '0.5s' }}
         >
           <div className="home-card-number">03</div>
-          <div className="home-card-category">/ 终端</div>
+          <div className="home-card-category">/ TERMINAL</div>
           <div className="home-terminal">
             <div><span className="home-terminal-cmd">$</span> whoami</div>
-            <div className="home-terminal-output">observer@event-horizon</div>
+            <div className="home-terminal-output">{t('home.card3.line2')}</div>
             <div><span className="home-terminal-cmd">$</span> cat status.log</div>
             <div className="home-terminal-output">
-              正在扫描星空...<span className="home-terminal-cursor" />
+              {t('home.card3.line4')}<span className="home-terminal-cursor" />
             </div>
           </div>
         </div>

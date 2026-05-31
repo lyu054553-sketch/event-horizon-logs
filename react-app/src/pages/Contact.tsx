@@ -1,19 +1,60 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { useI18n } from '../i18n';
 
 export default function Contact() {
   const { t } = useI18n();
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const callsign = String(data.get('callsign') || '').trim();
+    const email = String(data.get('email') || '').trim();
+    const message = String(data.get('message') || '').trim();
+
+    if (!callsign || !email || !message) {
+      setError('All fields are required.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Please enter a valid email.');
+      return;
+    }
+
+    setError('');
     setSent(true);
+    form.reset();
     setTimeout(() => setSent(false), 4000);
   };
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 4rem' }}>
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
+      {/* Background image */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: -1,
+          backgroundImage: 'url(/assets/backgrounds_contact_dark_space_v2.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+      {/* Vignette overlay */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: -1,
+          background: 'radial-gradient(ellipse at center, transparent 30%, rgba(3,7,11,0.7) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 4rem' }}>
       <p style={{ fontFamily: 'var(--font-display)', fontSize: 10, letterSpacing: 4, textTransform: 'uppercase', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>
         {t('contact.label')}
       </p>
@@ -28,27 +69,18 @@ export default function Contact() {
           {/* Terminal status */}
           <div
             style={{
-              background: 'rgba(5, 10, 15, 0.9)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 3,
+              background: 'rgba(5, 10, 15, 0.65)',
+              border: '1px solid rgba(160, 180, 200, 0.16)',
+              borderRadius: 20,
               padding: '1.5rem',
               fontSize: 13,
               lineHeight: 1.8,
               position: 'relative',
               marginBottom: '1.5rem',
+              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
             }}
           >
-            <div
-              style={{
-                position: 'absolute',
-                top: 0, left: 0, right: 0,
-                height: 28,
-                background: 'rgba(8,14,20,0.8)',
-                borderBottom: '1px solid var(--color-border)',
-                borderRadius: '3px 3px 0 0',
-              }}
-            />
-            <span style={{ position: 'absolute', top: 6, left: 12, fontSize: 10, letterSpacing: 2, color: 'var(--color-muted)', textTransform: 'uppercase' }}>
+            <span style={{ display: 'block', fontSize: 10, letterSpacing: 2, color: 'var(--color-muted)', textTransform: 'uppercase', marginBottom: 8 }}>
               transmit.sh
             </span>
             <div style={{ marginTop: 20 }}>
@@ -68,13 +100,15 @@ export default function Contact() {
           {/* Contact form */}
           <motion.form
             onSubmit={handleSubmit}
-            whileHover={{ borderColor: 'var(--color-border-hover)' }}
+            whileHover={{ borderColor: 'rgba(160, 180, 200, 0.35)' }}
             style={{
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 3,
+              background: 'rgba(5, 10, 15, 0.55)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              border: '1px solid rgba(160, 180, 200, 0.16)',
+              borderRadius: 20,
               padding: '2rem',
-              backdropFilter: 'blur(6px)',
+              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
             }}
           >
             {[
@@ -87,16 +121,18 @@ export default function Contact() {
                 </label>
                 <input
                   type={field.type}
+                  name={field.id}
                   placeholder={field.ph}
+                  required
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
                     fontFamily: 'var(--font-mono)',
                     fontSize: 13,
                     color: 'var(--color-text)',
-                    background: 'rgba(5, 10, 15, 0.8)',
-                    border: '1px solid var(--color-border)',
-                    borderRadius: 2,
+                    background: 'rgba(5, 10, 15, 0.45)',
+                    border: '1px solid rgba(160, 180, 200, 0.16)',
+                    borderRadius: 14,
                     outline: 'none',
                     transition: 'border-color 0.25s ease',
                     boxSizing: 'border-box',
@@ -110,16 +146,18 @@ export default function Contact() {
                 {t('contact.message')}
               </label>
               <textarea
+                name="message"
                 placeholder={t('contact.message_ph')}
+                required
                 style={{
                   width: '100%',
                   padding: '0.65rem 0.85rem',
                   fontFamily: 'var(--font-mono)',
                   fontSize: 13,
                   color: 'var(--color-text)',
-                  background: 'rgba(5, 10, 15, 0.8)',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: 2,
+                  background: 'rgba(5, 10, 15, 0.45)',
+                  border: '1px solid rgba(160, 180, 200, 0.16)',
+                  borderRadius: 14,
                   outline: 'none',
                   resize: 'vertical',
                   minHeight: 120,
@@ -143,9 +181,9 @@ export default function Contact() {
                 letterSpacing: 2,
                 textTransform: 'uppercase',
                 color: 'var(--color-text-bright)',
-                background: 'rgba(74, 141, 183, 0.12)',
-                border: '1px solid var(--color-accent)',
-                borderRadius: 2,
+                background: 'rgba(100, 190, 230, 0.15)',
+                border: '1px solid rgba(100, 190, 230, 0.3)',
+                borderRadius: 14,
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
               }}
@@ -153,6 +191,11 @@ export default function Contact() {
               {t('contact.send')}
             </button>
 
+            {error && (
+              <p style={{ fontSize: 11, color: '#f87171', marginTop: '0.75rem', textAlign: 'center' }}>
+                {error}
+              </p>
+            )}
             {sent && (
               <motion.p
                 initial={{ opacity: 0 }}
@@ -168,14 +211,14 @@ export default function Contact() {
         {/* Right: Channels + Telemetry + Note */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} style={{ position: 'sticky', top: '1.5rem' }}>
           {/* Channels */}
-          <div style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', borderRadius: 3, padding: '1.5rem', marginBottom: '1.5rem' }}>
+          <div style={{ background: 'rgba(5, 10, 15, 0.55)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid rgba(160, 180, 200, 0.16)', borderRadius: 20, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)' }}>
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 11, letterSpacing: 3, color: 'var(--color-accent)', marginBottom: '1.2rem', textTransform: 'uppercase' }}>
               {t('contact.ch_title')}
             </h3>
             {[
-              { icon: '🐙', label: t('contact.ch1'), tag: t('contact.ch1_tag'), href: 'https://github.com/lyu054553-sketch' },
-              { icon: '📧', label: t('contact.ch2'), tag: t('contact.ch2_tag'), href: 'mailto:lyu054553@gmail.com' },
-              { icon: '💬', label: t('contact.ch3'), tag: t('contact.ch3_tag'), href: '#' },
+              { icon: '/assets/icons_github.svg', label: t('contact.ch1'), tag: t('contact.ch1_tag'), href: 'https://github.com/lyu054553-sketch' },
+              { icon: '/assets/icons_mail.svg', label: t('contact.ch2'), tag: t('contact.ch2_tag'), href: 'mailto:lyu054553@gmail.com' },
+              { icon: '/assets/icons_wechat.svg', label: t('contact.ch3'), tag: t('contact.ch3_tag'), href: '#' },
             ].map((ch, i) => (
               <a
                 key={ch.label}
@@ -194,7 +237,7 @@ export default function Contact() {
                   transition: 'color 0.25s ease',
                 }}
               >
-                <span style={{ fontSize: 16, opacity: 0.6 }}>{ch.icon}</span>
+                <img src={ch.icon} alt="" style={{ width: 18, height: 18, opacity: 0.6 }} />
                 <span>{ch.label}</span>
                 <span style={{ marginLeft: 'auto', fontSize: 9, color: 'var(--color-muted)', letterSpacing: 1.5 }}>
                   {ch.tag}
@@ -207,12 +250,15 @@ export default function Contact() {
           <div
             className="glow-pulse"
             style={{
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 3,
+              background: 'rgba(5, 10, 15, 0.55)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              border: '1px solid rgba(160, 180, 200, 0.16)',
+              borderRadius: 20,
               padding: '1rem',
               fontSize: 11,
               marginBottom: '1.5rem',
+              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
             }}
           >
             {[
@@ -244,29 +290,20 @@ export default function Contact() {
           {/* Note terminal */}
           <div
             style={{
-              background: 'rgba(5, 10, 15, 0.9)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 3,
+              background: 'rgba(5, 10, 15, 0.65)',
+              border: '1px solid rgba(160, 180, 200, 0.16)',
+              borderRadius: 20,
               padding: '1.5rem',
               fontSize: 13,
               lineHeight: 1.8,
               position: 'relative',
+              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
             }}
           >
-            <div
-              style={{
-                position: 'absolute',
-                top: 0, left: 0, right: 0,
-                height: 28,
-                background: 'rgba(8,14,20,0.8)',
-                borderBottom: '1px solid var(--color-border)',
-                borderRadius: '3px 3px 0 0',
-              }}
-            />
-            <span style={{ position: 'absolute', top: 6, left: 12, fontSize: 10, letterSpacing: 2, color: 'var(--color-muted)', textTransform: 'uppercase' }}>
+            <span style={{ display: 'block', fontSize: 10, letterSpacing: 2, color: 'var(--color-muted)', textTransform: 'uppercase', marginBottom: 8 }}>
               note.sh
             </span>
-            <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 0 }}>
               <p><span className="term-prompt">$</span> <span className="term-cmd">cat note.txt</span></p>
               <br />
               <p className="term-output">{t('contact.note1')}</p>
@@ -286,6 +323,7 @@ export default function Contact() {
           </div>
         </motion.div>
       </div>
+    </div>
     </div>
   );
 }

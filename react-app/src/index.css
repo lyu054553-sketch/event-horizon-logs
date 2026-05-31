@@ -167,7 +167,7 @@ body {
 .home-bg {
   position: absolute;
   inset: 0;
-  background: url('/bg-eclipse.png') center/cover no-repeat;
+  background: url('/assets/backgrounds_home_dark_space.png') center/cover no-repeat;
   opacity: 0;
   transition: opacity 1.5s ease;
 }
@@ -221,7 +221,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(160, 180, 200, 0.18);
+  background: rgba(5, 10, 15, 0.55);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(160, 180, 200, 0.16);
+  border-radius: 20px;
+  padding: 0 24px;
   z-index: 10;
 }
 
@@ -279,8 +284,11 @@ body {
 .home-lang-toggle {
   display: flex;
   gap: 0;
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
+  background: rgba(5, 10, 15, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(160, 180, 200, 0.16);
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -366,16 +374,18 @@ body {
 .home-card {
   width: 385px;
   height: 190px;
-  background: var(--color-bg-card);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
+  background: rgba(5, 10, 15, 0.55);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(160, 180, 200, 0.16);
+  border-radius: 20px;
   padding: 28px;
   position: relative;
   transition: all 0.3s ease;
   cursor: pointer;
   opacity: 0;
   transform: translateY(20px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .home-card.loaded {
@@ -385,8 +395,8 @@ body {
 
 .home-card:hover {
   transform: translateY(-4px);
-  border-color: var(--color-border-hover);
-  box-shadow: 0 0 20px rgba(100, 190, 230, 0.1);
+  border-color: rgba(160, 180, 200, 0.35);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(100, 190, 230, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .home-card-number {
