@@ -2,26 +2,49 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import LeoMark from '../components/LeoMark';
 import Starfield from '../components/Starfield';
 import Navbar from '../components/Navbar';
-import { useI18n } from '../i18n';
 
 export default function Home() {
-  const { t } = useI18n();
   const [bgLoaded, setBgLoaded] = useState(false);
   const [titleLoaded, setTitleLoaded] = useState(false);
-  const [cardsLoaded, setCardsLoaded] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const videoSectionRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoVisible, setVideoVisible] = useState(false);
 
   // Load animations
   useEffect(() => {
     const bgTimer = setTimeout(() => setBgLoaded(true), 100);
     const titleTimer = setTimeout(() => setTitleLoaded(true), 600);
-    const cardsTimer = setTimeout(() => setCardsLoaded(true), 1200);
+    if (heroVideoRef.current) {
+      heroVideoRef.current.playbackRate = 0.5;
+    }
     return () => {
       clearTimeout(bgTimer);
       clearTimeout(titleTimer);
-      clearTimeout(cardsTimer);
     };
+  }, []);
+
+  // Intersection observer for video section
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVideoVisible(true);
+          videoRef.current?.play().catch(() => {});
+        } else {
+          videoRef.current?.pause();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (videoSectionRef.current) {
+      observer.observe(videoSectionRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   // Parallax effect
@@ -37,113 +60,34 @@ export default function Home() {
     transform: `translate(${mousePos.x * factor}px, ${mousePos.y * factor}px)`,
   });
 
+  const scrollToVideo = () => {
+    videoSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div
-      ref={containerRef}
-      className="home-container"
-      onMouseMove={handleMouseMove}
-    >
-      {/* Background layers */}
-      <Starfield />
-      <div
-        className={`home-bg ${bgLoaded ? 'loaded' : ''}`}
-        style={parallaxStyle(8)}
-      />
-      <div className="home-vignette" />
-      <div className="home-noise" />
-      <div className="home-scanlines" />
-      <div className="home-horizon-line" />
+    <div className="home-page-wrapper" onMouseMove={handleMouseMove}>
+      {/* Hero Section */}
+      <div ref={containerRef} className="home-container">
+        {/* Background layers */}
+        <Starfield />
+        <video
+          ref={heroVideoRef}
+          className={`home-bg-video ${bgLoaded ? 'loaded' : ''}`}
+          src="/assets/backgrounds_home_dark_space.mp4"
+          muted
+          loop
+          playsInline
+          autoPlay
+          style={parallaxStyle(8)}
+        />
+        <div className="home-vignette" />
+        <div className="home-noise" />
+        <div className="home-scanlines" />
+        <div className="home-horizon-line" />
 
       {/* Header */}
       <div style={{ animation: 'fadeInUp 0.8s ease forwards' }}>
         <Navbar />
-      </div>
-
-      {/* Left side info */}
-      <div
-        className="home-side-info"
-        style={{
-          left: 38,
-          top: 182,
-          animation: 'fadeInUp 0.8s ease 0.3s both',
-        }}
-      >
-        <div className="home-side-label">// STATUS</div>
-        <div className="home-side-value">ONLINE</div>
-      </div>
-
-      <div
-        className="home-side-info"
-        style={{
-          left: 38,
-          top: 408,
-          animation: 'fadeInUp 0.8s ease 0.5s both',
-        }}
-      >
-        <div className="home-side-label">// UPTIME</div>
-        <div className="home-side-value">182D 14H</div>
-      </div>
-
-      <div
-        className="home-side-info"
-        style={{
-          left: 38,
-          top: 650,
-          animation: 'fadeInUp 0.8s ease 0.7s both',
-        }}
-      >
-        <div className="home-side-label">// PROTOCOL</div>
-        <div className="home-side-value">v2.7.0</div>
-      </div>
-
-      {/* Left scale line */}
-      <div
-        className="home-scale-line"
-        style={{ left: 36, top: 260, height: 340 }}
-      >
-        {[0, 52, 104, 156, 208, 260, 312].map((offset) => (
-          <div key={offset} className="home-scale-tick" style={{ top: offset }} />
-        ))}
-        <div className="home-scale-dot" style={{ top: 170 }} />
-      </div>
-
-      {/* Right side info */}
-      <div
-        className="home-side-info"
-        style={{
-          right: 44,
-          top: 194,
-          textAlign: 'right',
-          animation: 'fadeInUp 0.8s ease 0.4s both',
-        }}
-      >
-        <div className="home-side-value" style={{ letterSpacing: '0.14em' }}>
-          23° 26′ 12″ N
-        </div>
-      </div>
-
-      <div
-        className="home-side-info"
-        style={{
-          right: 44,
-          top: 648,
-          textAlign: 'right',
-          animation: 'fadeInUp 0.8s ease 0.6s both',
-        }}
-      >
-        <div className="home-side-value" style={{ letterSpacing: '0.14em' }}>
-          113° 15′ 30″ E
-        </div>
-      </div>
-
-      {/* Right scale line */}
-      <div
-        className="home-scale-line"
-        style={{ right: 38, top: 260, height: 340 }}
-      >
-        {[0, 170, 340].map((offset) => (
-          <div key={offset} className="home-scale-dot" style={{ top: offset }} />
-        ))}
       </div>
 
       {/* Central LEO mark */}
@@ -156,56 +100,44 @@ export default function Home() {
         <LeoMark />
       </div>
 
-      {/* Bottom cards */}
-      <div className="home-cards-container">
-        {/* Card 1 */}
-        <div
-          className={`home-card ${cardsLoaded ? 'loaded' : ''}`}
-          style={{ transitionDelay: '0.1s' }}
-        >
-          <div className="home-card-number">01</div>
-          <div className="home-card-category">/ {t('home.card1.tag1')}</div>
-          <div className="home-card-title">{t('home.card1.title')}</div>
-          <div className="home-card-subtitle">{t('home.card1.time')}</div>
-          <div className="home-card-arrow">→</div>
-        </div>
-
-        {/* Card 2 */}
-        <div
-          className={`home-card ${cardsLoaded ? 'loaded' : ''}`}
-          style={{ transitionDelay: '0.3s' }}
-        >
-          <div className="home-card-number">02</div>
-          <div className="home-card-category">/ {t('home.card2.tag1')}</div>
-          <div className="home-card-title">{t('home.card2.title')}</div>
-          <div className="home-card-subtitle">{t('home.card2.time')}</div>
-          <div className="home-card-arrow">→</div>
-        </div>
-
-        {/* Card 3 - Terminal */}
-        <div
-          className={`home-card ${cardsLoaded ? 'loaded' : ''}`}
-          style={{ transitionDelay: '0.5s' }}
-        >
-          <div className="home-card-number">03</div>
-          <div className="home-card-category">/ TERMINAL</div>
-          <div className="home-terminal">
-            <div><span className="home-terminal-cmd">$</span> whoami</div>
-            <div className="home-terminal-output">{t('home.card3.line2')}</div>
-            <div><span className="home-terminal-cmd">$</span> cat status.log</div>
-            <div className="home-terminal-output">
-              {t('home.card3.line4')}<span className="home-terminal-cursor" />
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Bottom arrow */}
-      <div className="home-bottom-arrow">
+      <div className="home-bottom-arrow" onClick={scrollToVideo} style={{ cursor: 'pointer' }}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </div>
+    </div>
+
+    {/* Video Background Section */}
+    <div
+      ref={videoSectionRef}
+      className={`home-video-section ${videoVisible ? 'visible' : ''}`}
+    >
+      <video
+        ref={videoRef}
+        className="home-video-bg"
+        src="/assets/backgrounds_astronaut_falling.mp4"
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+      <div className="home-video-overlay" />
+      <div className="home-video-content">
+        <div className="home-video-label">// BEYOND THE HORIZON</div>
+        <h2 className="home-video-title">Exploring the Cosmos</h2>
+        <p className="home-video-desc">
+          Drifting through the infinite expanse, where light bends around massive bodies
+          and time stretches into eternity. Every star a story, every void a possibility.
+        </p>
+      </div>
+      <div className="home-video-terminal-float">
+        <div className="home-vt-line"><span className="home-terminal-cmd">$</span> navigate --deep-space</div>
+        <div className="home-vt-line home-vt-output">Initiating stellar drift sequence...</div>
+        <div className="home-vt-line home-vt-output">Coordinates locked: ∞, ∞, ∞</div>
+        <div className="home-vt-line"><span className="home-terminal-cmd">$</span> <span className="home-terminal-cursor" /></div>
+      </div>
+    </div>
     </div>
   );
 }

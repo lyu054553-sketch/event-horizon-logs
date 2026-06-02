@@ -8,10 +8,7 @@ export default function Navbar() {
 
   return (
     <header className="home-header">
-      <Link to="/" className="home-logo">{'<OBSERVER/>'}</Link>
-
       <div style={{ display: 'flex', alignItems: 'center', gap: '48px' }}>
-        {/* Language toggle */}
         <div className="home-lang-toggle">
           <button
             className="home-lang-btn"
@@ -36,7 +33,6 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="home-nav">
           {[
             { path: '/', label: t('nav.home'), sub: 'HOME' },
