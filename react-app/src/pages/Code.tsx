@@ -3,8 +3,8 @@ import { motion } from 'motion/react';
 import { useI18n } from '../i18n';
 
 const projects = [
-  { title: 'Medical Companion · 安心陪诊', desc: '一人就医，双向安心。全流程陪诊服务产品页面，包含用户痛点分析、服务流程、功能演示与竞品对比。', tags: ['Web', 'Landing Page', 'Healthcare'], status: 'Active', statusColor: '#4ade80', thumb: '/assets/thumbnails_medical_companion.png', link: '#' },
-  { title: 'Web3 Resource Hub · 学习资源大全', desc: '精选全球80+优质Web3学习资源，覆盖入门、DeFi、安全、钱包、工具等8大分类，中英双语，支持搜索与筛选。', tags: ['Web3', 'Resource', 'Education'], status: 'Active', statusColor: '#4ade80', thumb: '/assets/thumbnails_web3_hub.png', link: '#' },
+  { title: 'Medical Companion · 安心陪诊', desc: '一人就医，双向安心。全流程陪诊服务产品页面，包含用户痛点分析、服务流程、功能演示与竞品对比。', tags: ['Web', 'Landing Page', 'Healthcare'], status: 'Active', statusColor: '#4ade80', thumb: '/assets/thumbnails_medical_companion.png', link: '/assets/medical-companion.html' },
+  { title: 'Web3 Resource Hub · 学习资源大全', desc: '精选全球80+优质Web3学习资源，覆盖入门、DeFi、安全、钱包、工具等8大分类，中英双语，支持搜索与筛选。', tags: ['Web3', 'Resource', 'Education'], status: 'Active', statusColor: '#4ade80', thumb: '/assets/thumbnails_web3_hub.png', link: '/assets/web3-hub.html' },
 ];
 
 export default function Code() {
