@@ -1,6 +1,11 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import home from './i18n/home';
+import about from './i18n/about';
+import code from './i18n/code';
+import contact from './i18n/contact';
+import chrome from './i18n/chrome';
 
-const I18N: Record<string, Record<string, string>> = {
+const BASE_I18N: Record<string, Record<string, string>> = {
   en: {
     'site.title': 'THE EVENT HORIZON LOGS',
     'nav.about': 'ABOUT ME',
@@ -211,6 +216,13 @@ const I18N: Record<string, Record<string, string>> = {
     'contact.note8': '而且比我们能够想象的',
     'contact.note9': '还要离奇。"',
   },
+};
+
+// Merge per-module packs under the base dictionary: existing keys always
+// win on collision (现有 key 全保留), pack keys are appended (分包 key 追加).
+const I18N: Record<string, Record<string, string>> = {
+  en: { ...home.en, ...about.en, ...code.en, ...contact.en, ...chrome.en, ...BASE_I18N.en },
+  zh: { ...home.zh, ...about.zh, ...code.zh, ...contact.zh, ...chrome.zh, ...BASE_I18N.zh },
 };
 
 interface I18nContextValue {

@@ -1,0 +1,280 @@
+/* ═══════════════════════════════════════════════════════════════════
+   CONTACT / MESSAGE QUEUE — page-scoped styles
+   Owner: Contact_Designer. Extends the global design system
+   (index.css @theme tokens + shared primitives). Do not redefine
+   shared classes here.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Background layers (imagery untouched — overlay only) ────────── */
+.contact-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.contact-bg.loaded {
+  opacity: 1;
+}
+
+.contact-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(3, 7, 11, 0.7) 100%);
+  pointer-events: none;
+}
+
+/* ── Page container & grid ───────────────────────────────────────── */
+.contact-page {
+  position: relative;
+  min-height: 100vh;
+}
+
+.contact-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+  margin-top: 2rem;
+}
+
+.contact-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+/* Right rail: sticky on desktop only */
+.contact-aside {
+  position: sticky;
+  top: 76px; /* 56px navbar + breathing room */
+}
+
+/* ── Terminal blocks (transmit.sh / note.sh) ─────────────────────── */
+.contact-term {
+  padding: 1.1rem 1.25rem 1.25rem;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.contact-term p {
+  margin: 0;
+}
+.contact-term-gap {
+  height: 0.9rem;
+}
+.contact-term-ok {
+  color: var(--color-ok);
+}
+.contact-note-quote {
+  font-style: italic;
+}
+
+/* ── Form ────────────────────────────────────────────────────────── */
+.contact-form {
+  padding: 1.5rem 1.5rem 1.6rem;
+}
+
+.contact-field {
+  margin-bottom: 1.2rem;
+}
+
+.contact-field-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 0.45rem;
+}
+.contact-field-index {
+  color: var(--color-accent-dim);
+  letter-spacing: 0.1em;
+}
+
+.contact-input-wrap {
+  position: relative;
+}
+.contact-input-prefix {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent-dim);
+  pointer-events: none;
+  user-select: none;
+}
+.contact-input-wrap .input {
+  padding-left: 2.4rem;
+}
+
+.contact-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.7;
+}
+/* textarea prefix rides the first line instead of vertical center */
+.contact-input-wrap--area .contact-input-prefix {
+  top: 0.72rem;
+  transform: none;
+}
+
+.contact-submit {
+  width: 100%;
+  margin-top: 0.4rem;
+}
+.contact-submit:disabled {
+  opacity: 0.55;
+  cursor: default;
+  pointer-events: none;
+}
+
+.contact-error {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--color-err);
+}
+.contact-error::before {
+  content: 'ERR // ';
+  color: var(--color-muted);
+}
+
+/* ── Transmission log (accumulating send confirmations) ──────────── */
+.contact-log {
+  padding: 0.9rem 1.25rem 1.1rem;
+}
+.contact-log-line {
+  margin: 0;
+  padding: 0.35rem 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--color-ok);
+  border-bottom: 1px solid var(--color-line);
+  word-break: break-word;
+}
+.contact-log-line:last-child {
+  border-bottom: none;
+}
+.contact-log-ts {
+  color: var(--color-muted);
+  margin-right: 0.5rem;
+}
+
+/* ── Channels ────────────────────────────────────────────────────── */
+.contact-channels {
+  display: flex;
+  flex-direction: column;
+  padding: 0.35rem 0.5rem;
+}
+.contact-channel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color 0.25s ease, background-color 0.25s ease;
+}
+.contact-channel:last-child {
+  border-bottom: none;
+}
+.contact-channel:hover {
+  color: var(--color-text-bright);
+  background: rgba(100, 190, 230, 0.04);
+}
+.contact-channel-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.55;
+  flex-shrink: 0;
+  transition: opacity 0.25s ease;
+}
+.contact-channel:hover .contact-channel-icon {
+  opacity: 0.9;
+}
+.contact-channel-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.contact-channel .tag {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Telemetry ───────────────────────────────────────────────────── */
+.contact-telemetry {
+  padding: 0.5rem 1.25rem 0.7rem;
+  font-size: 11px;
+}
+.contact-tel-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.contact-tel-row:last-child {
+  border-bottom: none;
+}
+.contact-tel-label {
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 9px;
+}
+.contact-tel-value {
+  color: var(--color-text-bright);
+  font-weight: 500;
+  text-align: right;
+}
+.contact-tel-value--ok {
+  color: var(--color-ok);
+}
+.contact-tel-value--key {
+  font-size: 10px;
+}
+
+/* ── Responsive: single column, right rail un-sticks ─────────────── */
+@media (max-width: 960px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .contact-aside {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .contact-container {
+    padding: 2rem 1.1rem 3rem;
+  }
+  .contact-form {
+    padding: 1.2rem 1.1rem 1.3rem;
+  }
+  .contact-channel-label {
+    font-size: 11px;
+  }
+}

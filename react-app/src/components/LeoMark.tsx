@@ -1,11 +1,7 @@
 export default function LeoMark() {
   return (
-    <div className="relative w-[440px] max-w-[55vw] select-none">
-      <svg
-        viewBox="0 0 520 260"
-        className="w-full overflow-visible"
-        aria-label="LEO identity mark"
-      >
+    <div className="leo-mark">
+      <svg viewBox="0 0 520 260" aria-label="LEO identity mark" role="img">
         <defs>
           {/* subtle letter glow */}
           <filter id="hudGlow" x="-40%" y="-40%" width="180%" height="180%">
@@ -36,20 +32,21 @@ export default function LeoMark() {
 
         {/* thin horizontal flare line */}
         <rect
+          className="lm-fadein lm-flare"
           x="40"
           y="104"
           width="440"
           height="1"
           fill="url(#flareLine)"
-          opacity="0.3"
         />
 
         {/* tiny flare dots at intersections */}
-        <circle cx="128" cy="104" r="8" fill="url(#dotFlare)" opacity="0.35" />
-        <circle cx="388" cy="104" r="10" fill="url(#dotFlare)" opacity="0.4" />
+        <circle className="lm-fadein lm-dot-a" cx="128" cy="104" r="8" fill="url(#dotFlare)" />
+        <circle className="lm-fadein lm-dot-b" cx="388" cy="104" r="10" fill="url(#dotFlare)" />
 
-        {/* LEO letterforms */}
+        {/* LEO letterforms — drawn in via stroke-dashoffset (see home.css) */}
         <g
+          className="lm-g"
           filter="url(#hudGlow)"
           stroke="rgba(220,240,255,0.82)"
           strokeWidth="4.5"
@@ -65,12 +62,12 @@ export default function LeoMark() {
           <line x1="208" y1="104" x2="318" y2="104" />
           <line x1="208" y1="160" x2="318" y2="160" />
 
-          {/* O — diameter ≈ 85% of E height (E spans 48..160 = 112, 85% ≈ 95, r ≈ 48) */}
+          {/* O */}
           <circle cx="408" cy="104" r="48" />
         </g>
 
         {/* faint inner glow on L vertical + O */}
-        <g opacity="0.2" filter="url(#hudGlow)">
+        <g className="lm-inner" filter="url(#hudGlow)">
           <line
             x1="88"
             y1="42"
@@ -90,67 +87,36 @@ export default function LeoMark() {
         </g>
 
         {/* Chinese name */}
-        <text
-          x="260"
-          y="210"
-          textAnchor="middle"
-          style={{
-            fontSize: '23px',
-            fontWeight: 300,
-            letterSpacing: '0.18em',
-            fill: 'rgba(225,240,252,0.82)',
-            fontFamily: '"Noto Sans SC", "PingFang SC", sans-serif',
-            filter: 'drop-shadow(0 0 6px rgba(180,220,255,0.3))',
-          }}
-        >
+        <text className="lm-fadein lm-name" x="260" y="210" textAnchor="middle">
           乐洋
         </text>
 
         {/* divider */}
-        <line
-          x1="195"
-          y1="226"
-          x2="325"
-          y2="226"
-          stroke="rgba(170,205,235,0.2)"
-          strokeWidth="0.5"
-        />
-        <circle
-          cx="260"
-          cy="226"
-          r="1.5"
-          fill="rgba(220,240,255,0.7)"
-          filter="url(#hudGlow)"
-        />
+        <g className="lm-fadein lm-divider">
+          <line
+            x1="195"
+            y1="226"
+            x2="325"
+            y2="226"
+            stroke="rgba(170,205,235,0.2)"
+            strokeWidth="0.5"
+          />
+          <circle
+            cx="260"
+            cy="226"
+            r="1.5"
+            fill="rgba(220,240,255,0.7)"
+            filter="url(#hudGlow)"
+          />
+        </g>
 
         {/* Chinese subtitle */}
-        <text
-          x="260"
-          y="243"
-          textAnchor="middle"
-          style={{
-            fontSize: '12px',
-            fontWeight: 300,
-            letterSpacing: '0.2em',
-            fill: 'rgba(195,220,240,0.6)',
-            fontFamily: '"Noto Sans SC", "PingFang SC", sans-serif',
-          }}
-        >
+        <text className="lm-fadein lm-sub-zh" x="260" y="243" textAnchor="middle">
           AI 学习者 · 构建者 · 探索者
         </text>
 
         {/* English subtitle */}
-        <text
-          x="260"
-          y="258"
-          textAnchor="middle"
-          style={{
-            fontSize: '9px',
-            letterSpacing: '0.42em',
-            fill: 'rgba(175,205,230,0.5)',
-            fontFamily: '"JetBrains Mono", "IBM Plex Mono", monospace',
-          }}
-        >
+        <text className="lm-fadein lm-sub-en" x="260" y="258" textAnchor="middle">
           BUILDER · AI NATIVE · EARLY RISER
         </text>
       </svg>

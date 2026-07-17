@@ -1,0 +1,422 @@
+/* ═══════════════════════════════════════════════════════════════════
+   CHROME — site shell: navbar / mobile overlay / page transition / footer
+   Owned by Chrome_Designer. Consumes global tokens & .hud from index.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Header bar ──────────────────────────────────────────────────── */
+.chrome-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0 32px;
+  background: var(--color-panel-solid);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-line);
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    backdrop-filter 0.4s ease;
+}
+
+/* Transparent over the home hero */
+.chrome-header--home {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
+/* Deepens once the page is scrolled (any route) */
+.chrome-header.scrolled {
+  background: rgba(4, 9, 14, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--color-line);
+}
+
+/* ── Station identity block (left, links home) ───────────────────── */
+.chrome-station {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.chrome-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-ok);
+  box-shadow: 0 0 6px rgba(122, 198, 172, 0.45);
+  animation: chromePulse 3.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes chromePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.chrome-station-texts {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+
+.chrome-station-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--color-text);
+  transition: color 0.25s ease;
+}
+.chrome-station:hover .chrome-station-id {
+  color: var(--color-text-bright);
+}
+
+.chrome-station-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ── Desktop numbered menu (right) ───────────────────────────────── */
+.chrome-right {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.chrome-nav {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+}
+
+.chrome-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  text-decoration: none;
+}
+
+.chrome-nav-num {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
+.chrome-nav-texts {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+
+.chrome-nav-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  transition: color 0.25s ease;
+}
+
+.chrome-nav-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.24em;
+  color: rgba(150, 165, 180, 0.32);
+  transition: color 0.25s ease;
+}
+
+.chrome-nav-item:hover .chrome-nav-label {
+  color: var(--color-text);
+}
+
+/* Short accent tick under the active item */
+.chrome-nav-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-accent-dim);
+  transition: width 0.3s ease;
+}
+.chrome-nav-item:hover::after {
+  width: 14px;
+}
+.chrome-nav-item.active .chrome-nav-label {
+  color: var(--color-text-bright);
+}
+.chrome-nav-item.active .chrome-nav-sub {
+  color: var(--color-muted);
+}
+.chrome-nav-item.active::after {
+  width: 18px;
+  background: var(--color-accent);
+}
+
+/* ── Language segmented control ──────────────────────────────────── */
+.chrome-lang {
+  display: flex;
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  overflow: hidden;
+  background: rgba(5, 10, 15, 0.4);
+  flex-shrink: 0;
+}
+
+.chrome-lang-btn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  padding: 6px 11px;
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+.chrome-lang-btn + .chrome-lang-btn {
+  border-left: 1px solid var(--color-line);
+}
+.chrome-lang-btn:hover {
+  color: var(--color-text);
+}
+.chrome-lang-btn.active {
+  background: rgba(100, 190, 230, 0.1);
+  color: var(--color-text-bright);
+}
+
+/* ── Mobile menu button ──────────────────────────────────────────── */
+.chrome-menu-btn {
+  display: none;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+.chrome-menu-btn:hover {
+  border-color: var(--color-line-strong);
+  color: var(--color-text-bright);
+}
+
+/* ── Mobile full-screen overlay ──────────────────────────────────── */
+.chrome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px 28px;
+  background: rgba(3, 7, 11, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: chromeOverlayIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes chromeOverlayIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chrome-overlay-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.chrome-overlay-close {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+.chrome-overlay-close:hover {
+  border-color: var(--color-line-strong);
+  color: var(--color-text-bright);
+}
+
+.chrome-overlay-section {
+  margin: 7vh 0 1.2rem;
+}
+
+.chrome-overlay-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.chrome-overlay-item {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 16px 2px;
+  border-bottom: 1px solid var(--color-line);
+  text-decoration: none;
+  animation: chromeOverlayIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.chrome-overlay-item:nth-child(1) { animation-delay: 0.06s; }
+.chrome-overlay-item:nth-child(2) { animation-delay: 0.11s; }
+.chrome-overlay-item:nth-child(3) { animation-delay: 0.16s; }
+.chrome-overlay-item:nth-child(4) { animation-delay: 0.21s; }
+
+.chrome-overlay-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
+.chrome-overlay-label {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  transition: color 0.25s ease;
+}
+.chrome-overlay-item:hover .chrome-overlay-label {
+  color: var(--color-text-bright);
+}
+.chrome-overlay-item.active .chrome-overlay-label {
+  color: var(--color-text-bright);
+}
+.chrome-overlay-item.active .chrome-overlay-num {
+  color: var(--color-accent);
+}
+
+.chrome-overlay-sub {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  color: rgba(150, 165, 180, 0.32);
+}
+
+.chrome-overlay-bottom {
+  margin-top: auto;
+  padding-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* ── Page transition (keyed by pathname in Layout) ───────────────── */
+.page-transition {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.chrome-main {
+  padding-top: 56px;
+  min-height: 100vh;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.chrome-footer {
+  border-top: 1px solid var(--color-line);
+  margin-top: 4rem;
+  padding: 1.5rem 32px 1.4rem;
+}
+
+.chrome-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem 1.5rem;
+  flex-wrap: wrap;
+}
+
+.chrome-footer-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.chrome-footer-hud {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .chrome-nav {
+    gap: 26px;
+  }
+  .chrome-right {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .chrome-header {
+    padding: 0 16px;
+  }
+  .chrome-nav,
+  .chrome-header .chrome-lang {
+    display: none;
+  }
+  .chrome-menu-btn {
+    display: inline-flex;
+  }
+  .chrome-station-sub {
+    display: none;
+  }
+  .chrome-footer {
+    padding: 1.4rem 16px 1.2rem;
+  }
+  .chrome-footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,225 +1,280 @@
-import { useState } from 'react';
-import { motion } from 'motion/react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import { useI18n } from '../i18n';
+import { Reveal, Panel, Tag, PageHeader } from '../components/ui';
 import LeoMark from '../components/LeoMark';
+import '../styles/about.css';
 
-function TerminalBlock({ title, children }: { title: string; children: React.ReactNode }) {
+/* ── Terminal line — staggers in via CSS animation-delay (--i) ──── */
+function TermLine({
+  i,
+  className = '',
+  children,
+}: {
+  i: number;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
-    <div
-      style={{
-        background: 'rgba(5, 10, 15, 0.65)',
-        border: '1px solid rgba(160, 180, 200, 0.16)',
-        borderRadius: 20,
-        padding: '1.5rem',
-        fontSize: 13,
-        lineHeight: 1.8,
-        position: 'relative',
-        marginBottom: '1.5rem',
-        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
-      }}
+    <p
+      className={`about-term-line${className ? ` ${className}` : ''}`}
+      style={{ '--i': i } as CSSProperties}
     >
-      <div
-        style={{
-          position: 'absolute',
-          top: 0, left: 0, right: 0,
-          height: 28,
-          background: 'rgba(8,14,20,0.8)',
-          borderBottom: '1px solid var(--color-border)',
-          borderRadius: '20px 20px 0 0',
-        }}
-      />
-      <span
-        style={{
-          position: 'absolute',
-          top: 6, left: 12,
-          fontSize: 10,
-          letterSpacing: 2,
-          color: 'var(--color-muted)',
-          textTransform: 'uppercase',
-        }}
-      >
-        {title}
-      </span>
-      <div style={{ marginTop: 20 }}>{children}</div>
-    </div>
+      {children}
+    </p>
   );
 }
 
-function TelemetryPanel({ rows }: { rows: { label: string; value: string; color?: string }[] }) {
+/* ── Terminal module — unified panel, header = FILE no. + filename ─ */
+function TermPanel({
+  title,
+  right,
+  base,
+  children,
+}: {
+  title: string;
+  right: string;
+  base: number;
+  children: ReactNode;
+}) {
   return (
-    <div
-      className="glow-pulse"
-      style={{
-        background: 'rgba(5, 10, 15, 0.55)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-        border: '1px solid rgba(160, 180, 200, 0.16)',
-        borderRadius: 20,
-        padding: '1rem',
-        fontSize: 11,
-        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
-      }}
-    >
-      {rows.map((row, i) => (
-        <div
-          key={i}
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: '0.35rem 0',
-            borderBottom: i < rows.length - 1 ? '1px solid rgba(154,178,199,0.08)' : 'none',
-          }}
-        >
-          <span style={{ color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: 1.5, fontSize: 9 }}>
-            {row.label}
-          </span>
-          <span style={{ color: row.color || 'var(--color-text-bright)', fontWeight: 500 }}>
-            {row.value}
-          </span>
-        </div>
-      ))}
-    </div>
+    <Panel title={title} right={right}>
+      <div
+        className="about-term-body"
+        style={{ '--line-base': `${base}ms` } as CSSProperties}
+      >
+        {children}
+      </div>
+    </Panel>
   );
+}
+
+interface SpecRow {
+  label: string;
+  value: string;
+  tone?: 'accent' | 'ok';
 }
 
 export default function About() {
   const { t } = useI18n();
   const [bgLoaded, setBgLoaded] = useState(false);
 
+  const tags = [
+    t('about.tag1'),
+    t('about.tag2'),
+    t('about.tag3'),
+    t('about.tag4'),
+    t('about.tag5'),
+    t('about.tag6'),
+  ];
+
+  const specRows: SpecRow[] = [
+    { label: t('about.mbti'), value: t('about.mbti_val'), tone: 'accent' },
+    { label: t('about.focus_label'), value: t('about.focus_val') },
+    { label: t('about.routine'), value: t('about.routine_val') },
+    { label: t('about.status'), value: t('about.status_val'), tone: 'ok' },
+  ];
+
   return (
-    <div style={{ position: 'relative', minHeight: '100vh' }}>
-      {/* Background image */}
+    <div className="about-page">
+      {/* Background image (fade-in preserved) */}
       <img
         src="/assets/backgrounds_about_dark_space.png"
         alt=""
         onLoad={() => setBgLoaded(true)}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: -1,
-          opacity: bgLoaded ? 1 : 0,
-          transition: 'opacity 0.8s ease',
-        }}
+        className={`about-bg${bgLoaded ? ' is-loaded' : ''}`}
       />
-      {/* Vignette overlay */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: -1,
-          background: 'radial-gradient(ellipse at center, transparent 30%, rgba(3,7,11,0.7) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 4rem' }}>
-      <p style={{ fontFamily: 'var(--font-display)', fontSize: 10, letterSpacing: 4, textTransform: 'uppercase', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>
-        {t('about.label')}
-      </p>
-      <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', fontWeight: 700, color: 'var(--color-text-bright)', letterSpacing: 2, marginBottom: '1rem' }}>
-        {t('about.title')}
-      </h2>
-      <div style={{ width: 60, height: 1, background: 'var(--color-accent)', marginBottom: '2rem' }} />
+      {/* Vignette + faint scanlines above the photo */}
+      <div className="about-vignette" />
+      <div className="about-scanlines" />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '2.5rem', alignItems: 'start' }}>
-        {/* Left column */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
-            <LeoMark />
+      <div className="about-wrap">
+        <PageHeader label={t('about.label')} title={t('about.title')} />
+
+        {/* Dossier meta bar */}
+        <Reveal>
+          <div className="about-dossier-bar hud">
+            <span>{t('about.dossier_no')}</span>
+            <span>{t('about.clearance')}</span>
+          </div>
+        </Reveal>
+
+        <div className="about-grid">
+          {/* ── LEFT — FILE 01 IDENTITY + FILE 02 SPEC ── */}
+          <div className="about-col">
+            <Reveal delay={0}>
+              <Panel title={t('about.file_identity')} right={t('about.identity_no')}>
+                <div className="about-identity-body">
+                  <div className="about-leo">
+                    <LeoMark />
+                  </div>
+                  <div className="about-identity-rule" />
+                  <p className="about-role">{t('about.role')}</p>
+                  <p className="about-bio">{t('about.bio')}</p>
+                  <div className="about-tags">
+                    {tags.map((tag) => (
+                      <Tag key={tag} tone="accent">
+                        {tag}
+                      </Tag>
+                    ))}
+                  </div>
+                </div>
+              </Panel>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <Panel title={t('about.file_spec')} right={t('about.spec_right')}>
+                <div className="about-spec-rows">
+                  {specRows.map((row) => (
+                    <div className="about-spec-row" key={row.label}>
+                      <span className="about-spec-label">{row.label}</span>
+                      <span
+                        className={`about-spec-value${
+                          row.tone === 'accent'
+                            ? ' is-accent'
+                            : row.tone === 'ok'
+                              ? ' is-ok'
+                              : ''
+                        }`}
+                      >
+                        {row.tone === 'ok' && (
+                          <span className="about-status-dot" aria-hidden="true" />
+                        )}
+                        {row.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </Panel>
+            </Reveal>
           </div>
 
-          <div style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', borderRadius: 3, padding: '1.5rem', backdropFilter: 'blur(6px)', textAlign: 'center' }}>
-            <p style={{ fontSize: 11, color: 'var(--color-accent)', letterSpacing: 3, textTransform: 'uppercase', marginBottom: '1rem' }}>
-              {t('about.role')}
-            </p>
-            <p style={{ fontSize: 12, color: 'var(--color-muted)', lineHeight: 1.8 }}>
-              {t('about.bio')}
-            </p>
-          </div>
-
-          {/* Tags */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '1.2rem', justifyContent: 'center' }}>
-            {[t('about.tag1'), t('about.tag2'), t('about.tag3'), t('about.tag4'), t('about.tag5'), t('about.tag6')].map((tag) => (
-              <motion.span
-                key={tag}
-                whileHover={{ borderColor: 'rgba(74,141,183,0.5)', background: 'rgba(74,141,183,0.12)', boxShadow: '0 0 12px rgba(74,141,183,0.15)' }}
-                style={{
-                  padding: '0.25rem 0.65rem',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 9,
-                  letterSpacing: 1.5,
-                  textTransform: 'uppercase',
-                  color: 'var(--color-accent)',
-                  border: '1px solid rgba(74,141,183,0.25)',
-                  borderRadius: 2,
-                  background: 'rgba(74,141,183,0.06)',
-                  backdropFilter: 'blur(4px)',
-                  cursor: 'default',
-                  transition: 'all 0.3s ease',
-                }}
+          {/* ── RIGHT — FILE 03–05 terminal modules ── */}
+          <div className="about-col">
+            <Reveal delay={240}>
+              <TermPanel
+                title={t('about.file_whoami')}
+                right={t('about.term1_right')}
+                base={380}
               >
-                {tag}
-              </motion.span>
-            ))}
+                <TermLine i={0}>
+                  <span className="term-prompt">$</span>{' '}
+                  <span className="term-cmd">whoami</span>
+                </TermLine>
+                <TermLine i={1} className="term-output">
+                  {t('about.whoami1')}
+                </TermLine>
+                <TermLine i={2} className="term-output">
+                  {t('about.whoami2')}
+                </TermLine>
+                <br />
+                <TermLine i={3}>
+                  <span className="term-prompt">$</span>{' '}
+                  <span className="term-cmd">cat motto.md</span>
+                </TermLine>
+                <TermLine i={4} className="term-output">
+                  {t('about.motto1')}
+                </TermLine>
+                <TermLine i={5} className="term-output">
+                  {t('about.motto2')}
+                </TermLine>
+                <br />
+                <TermLine i={6}>
+                  <span className="term-prompt">$</span>{' '}
+                  <span className="cursor-blink" />
+                </TermLine>
+              </TermPanel>
+            </Reveal>
+
+            <Reveal delay={360}>
+              <TermPanel
+                title={t('about.file_tools')}
+                right={t('about.term2_right')}
+                base={500}
+              >
+                <TermLine i={0}>
+                  <span className="term-prompt">$</span>{' '}
+                  <span className="term-cmd">env | grep TOOLS</span>
+                </TermLine>
+                <br />
+                <TermLine i={1} className="term-output">
+                  {t('about.tools1')}
+                </TermLine>
+                <TermLine i={2} className="term-output">
+                  {t('about.tools2')}
+                </TermLine>
+                <TermLine i={3} className="term-output">
+                  {t('about.tools3')}
+                </TermLine>
+                <TermLine i={4} className="term-output">
+                  {t('about.tools4')}
+                </TermLine>
+                <TermLine i={5} className="term-output">
+                  {t('about.tools5')}
+                </TermLine>
+                <br />
+                <TermLine i={6}>
+                  <span className="term-prompt">$</span>{' '}
+                  <span className="cursor-blink" />
+                </TermLine>
+              </TermPanel>
+            </Reveal>
+
+            <Reveal delay={480}>
+              <TermPanel
+                title={t('about.file_domains')}
+                right={t('about.term3_right')}
+                base={620}
+              >
+                <TermLine i={0}>
+                  <span className="term-prompt">$</span>{' '}
+                  <span className="term-cmd">jq '.domains' manifest.json</span>
+                </TermLine>
+                <br />
+                <TermLine i={1} className="term-output">
+                  [
+                </TermLine>
+                <TermLine i={2} className="term-output">
+                  {'  '}
+                  {t('about.dom1')}
+                </TermLine>
+                <TermLine i={3} className="term-output">
+                  {'  '}
+                  {t('about.dom2')}
+                </TermLine>
+                <TermLine i={4} className="term-output">
+                  {'  '}
+                  {t('about.dom3')}
+                </TermLine>
+                <TermLine i={5} className="term-output">
+                  {'  '}
+                  {t('about.dom4')}
+                </TermLine>
+                <TermLine i={6} className="term-output">
+                  {'  '}
+                  {t('about.dom5')}
+                </TermLine>
+                <TermLine i={7} className="term-output">
+                  {'  '}
+                  {t('about.dom6')}
+                </TermLine>
+                <TermLine i={8} className="term-output">
+                  ]
+                </TermLine>
+                <br />
+                <TermLine i={9}>
+                  <span className="term-prompt">$</span>{' '}
+                  <span className="cursor-blink" />
+                </TermLine>
+              </TermPanel>
+            </Reveal>
           </div>
+        </div>
 
-          <div style={{ marginTop: '1.5rem' }}>
-            <TelemetryPanel
-              rows={[
-                { label: t('about.mbti'), value: t('about.mbti_val'), color: 'var(--color-accent)' },
-                { label: t('about.focus_label'), value: t('about.focus_val') },
-                { label: t('about.routine'), value: t('about.routine_val') },
-                { label: t('about.status'), value: t('about.status_val'), color: '#4ade80' },
-              ]}
-            />
-          </div>
-        </motion.div>
-
-        {/* Right column */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}>
-          <TerminalBlock title="whoami.sh">
-            <p><span className="term-prompt">$</span> <span className="term-cmd">whoami</span></p>
-            <p className="term-output">{t('about.whoami1')}</p>
-            <p className="term-output">{t('about.whoami2')}</p>
-            <br />
-            <p><span className="term-prompt">$</span> <span className="term-cmd">cat motto.md</span></p>
-            <p className="term-output">{t('about.motto1')}</p>
-            <p className="term-output">{t('about.motto2')}</p>
-            <br />
-            <p><span className="term-prompt">$</span> <span className="cursor-blink" /></p>
-          </TerminalBlock>
-
-          <TerminalBlock title="tools.env">
-            <p><span className="term-prompt">$</span> <span className="term-cmd">env | grep TOOLS</span></p>
-            <br />
-            <p className="term-output">{t('about.tools1')}</p>
-            <p className="term-output">{t('about.tools2')}</p>
-            <p className="term-output">{t('about.tools3')}</p>
-            <p className="term-output">{t('about.tools4')}</p>
-            <p className="term-output">{t('about.tools5')}</p>
-            <br />
-            <p><span className="term-prompt">$</span> <span className="cursor-blink" /></p>
-          </TerminalBlock>
-
-          <TerminalBlock title="domains.json">
-            <p><span className="term-prompt">$</span> <span className="term-cmd">jq '.domains' manifest.json</span></p>
-            <br />
-            <p className="term-output">[</p>
-            <p className="term-output">  {t('about.dom1')}</p>
-            <p className="term-output">  {t('about.dom2')}</p>
-            <p className="term-output">  {t('about.dom3')}</p>
-            <p className="term-output">  {t('about.dom4')}</p>
-            <p className="term-output">  {t('about.dom5')}</p>
-            <p className="term-output">  {t('about.dom6')}</p>
-            <p className="term-output">]</p>
-            <br />
-            <p><span className="term-prompt">$</span> <span className="cursor-blink" /></p>
-          </TerminalBlock>
-        </motion.div>
+        {/* Record footer */}
+        <Reveal delay={600}>
+          <p className="about-end-record hud">{t('about.end_record')}</p>
+        </Reveal>
       </div>
-    </div>
     </div>
   );
 }

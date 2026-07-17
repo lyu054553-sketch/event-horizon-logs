@@ -1,0 +1,393 @@
+/* ═══════════════════════════════════════════════════════════════════
+   HOME — Observation deck overrides & extensions
+   Loaded after index.css (same-name legacy rules are overridden here).
+   Sections:
+     1. LeoMark entrance choreography (draw-in → staggered fade → float)
+     2. Hero HUD layer & corner frame
+     3. Scroll cue (DESCEND)
+     4. Video section chapter refinements & rail
+     5. Responsive
+     6. Reduced motion
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── 1. LeoMark entrance ─────────────────────────────────────────── */
+
+.leo-mark {
+  position: relative;
+  width: min(440px, 55vw);
+  user-select: none;
+  animation: lmFloat 10s ease-in-out 3.6s infinite;
+}
+.leo-mark svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+@keyframes lmFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* letterform draw-in: dashoffset → 0, slow start, long ease-out */
+.lm-g > line,
+.lm-g > circle {
+  stroke-dasharray: var(--lm-len, 300);
+  stroke-dashoffset: var(--lm-len, 300);
+  animation-name: lmDraw;
+  animation-duration: 1.4s;
+  animation-timing-function: cubic-bezier(0.35, 0, 0.15, 1);
+  animation-fill-mode: forwards;
+}
+.lm-g > :nth-child(1) { --lm-len: 124; animation-delay: 0.15s; animation-duration: 1.2s; } /* L vert  */
+.lm-g > :nth-child(2) { --lm-len: 80;  animation-delay: 0.50s; animation-duration: 1.0s; } /* L horiz */
+.lm-g > :nth-child(3) { --lm-len: 110; animation-delay: 0.75s; animation-duration: 1.1s; } /* E top   */
+.lm-g > :nth-child(4) { --lm-len: 110; animation-delay: 0.90s; animation-duration: 1.1s; } /* E mid   */
+.lm-g > :nth-child(5) { --lm-len: 110; animation-delay: 1.05s; animation-duration: 1.1s; } /* E bot   */
+.lm-g > :nth-child(6) { --lm-len: 302; animation-delay: 1.30s; animation-duration: 1.7s; } /* O circ  */
+
+@keyframes lmDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* generic fade-in; target opacity per element via --lm-o */
+.lm-fadein {
+  opacity: 0;
+  animation: lmFadeIn 1.1s ease-out forwards;
+}
+@keyframes lmFadeIn {
+  to { opacity: var(--lm-o, 1); }
+}
+
+.lm-flare   { --lm-o: 0.3;  animation-delay: 1.9s; }
+.lm-dot-a   { --lm-o: 0.35; animation-delay: 2.05s; }
+.lm-dot-b   { --lm-o: 0.4;  animation-delay: 2.1s; }
+.lm-inner   {
+  opacity: 0;
+  animation: lmFadeIn 1.6s ease-out 1.6s forwards;
+  --lm-o: 0.2;
+}
+.lm-name    { animation-delay: 2.2s; }
+.lm-divider { animation-delay: 2.45s; }
+.lm-sub-zh  { animation-delay: 2.7s; }
+.lm-sub-en  { animation-delay: 2.95s; }
+
+/* SVG text styles (moved out of inline attrs) */
+.lm-name {
+  font-size: 23px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  fill: rgba(225, 240, 252, 0.82);
+  font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+  filter: drop-shadow(0 0 6px rgba(180, 220, 255, 0.3));
+}
+.lm-sub-zh {
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  fill: rgba(195, 220, 240, 0.6);
+  font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+}
+.lm-sub-en {
+  font-size: 9px;
+  letter-spacing: 0.42em;
+  fill: rgba(175, 205, 230, 0.5);
+  font-family: var(--font-mono);
+}
+
+/* ── 2. Hero HUD layer & corner frame ────────────────────────────── */
+
+/* thin corner ticks framing the observation deck */
+.hero-frame {
+  position: absolute;
+  inset: 14px;
+  z-index: 6;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--color-line), var(--color-line)),
+    linear-gradient(var(--color-line), var(--color-line)),
+    linear-gradient(var(--color-line), var(--color-line)),
+    linear-gradient(var(--color-line), var(--color-line)),
+    linear-gradient(var(--color-line), var(--color-line)),
+    linear-gradient(var(--color-line), var(--color-line)),
+    linear-gradient(var(--color-line), var(--color-line)),
+    linear-gradient(var(--color-line), var(--color-line));
+  background-repeat: no-repeat;
+  background-size:
+    14px 1px, 1px 14px,
+    14px 1px, 1px 14px,
+    14px 1px, 1px 14px,
+    14px 1px, 1px 14px;
+  background-position:
+    left top, left top,
+    right top, right top,
+    left bottom, left bottom,
+    right bottom, right bottom;
+}
+
+.hero-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+.hero-hud-cell {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+.hero-hud-tl { top: 72px; left: 26px; }
+.hero-hud-bl { bottom: 26px; left: 26px; }
+.hero-hud-br { bottom: 26px; right: 26px; text-align: right; align-items: flex-end; }
+
+.hero-hud-station {
+  color: rgba(190, 208, 226, 0.55);
+  letter-spacing: 0.22em;
+}
+.hero-hud-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.22em;
+}
+.hero-hud-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-ok);
+  box-shadow: 0 0 6px rgba(122, 198, 172, 0.45);
+  animation: hudDot 3.2s ease-in-out infinite;
+}
+@keyframes hudDot {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+.hero-hud-clock {
+  color: rgba(190, 208, 226, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+/* central mark wrapper — parallax applied here, float lives inside .leo-mark */
+.hero-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(180, 215, 255, 0.15));
+  transition: transform 0.25s ease-out;
+}
+
+/* bg video: slight overscan so parallax never reveals edges */
+.home-bg-video {
+  transform: scale(1.03);
+  transition: opacity 1.5s ease, transform 0.4s ease-out;
+}
+
+/* ── 3. Scroll cue ───────────────────────────────────────────────── */
+
+.hero-cue {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  color: rgba(190, 210, 228, 0.48);
+  opacity: 0;
+  animation:
+    cueIn 1.2s ease-out 2.4s forwards,
+    cueBob 5s ease-in-out 3.6s infinite;
+  transition: color 0.3s ease;
+}
+.hero-cue:hover,
+.hero-cue:focus-visible {
+  color: rgba(228, 240, 252, 0.85);
+}
+@keyframes cueIn {
+  to { opacity: 1; }
+}
+@keyframes cueBob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(4px); }
+}
+.hero-cue-label {
+  font-size: 9px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  padding-left: 0.42em; /* optically re-center letter-spaced text */
+}
+.hero-cue-sub {
+  font-size: 9px;
+  letter-spacing: 0.5em;
+  padding-left: 0.5em;
+}
+.hero-cue-line {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(170, 200, 225, 0.5),
+    transparent
+  );
+}
+.hero-cue-tri {
+  display: block;
+}
+
+/* ── 4. Video section — chapter treatment ────────────────────────── */
+
+/* entrance handled by <Reveal> children, not the legacy wrapper gate */
+.home-video-content {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.home-video-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  color: var(--color-accent-dim);
+  margin-bottom: 1.6rem;
+}
+.home-video-label::before,
+.home-video-label::after {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--color-line-strong);
+}
+
+.home-video-title {
+  color: rgba(235, 242, 255, 0.82);
+  letter-spacing: 0.14em;
+}
+
+.home-video-desc {
+  margin-bottom: 0;
+}
+
+/* floating terminal — hairline-railed log excerpt */
+.home-video-terminal-float {
+  top: 96px;
+  left: 44px;
+  padding-left: 14px;
+  border-left: 1px solid rgba(160, 180, 200, 0.16);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 2.1;
+  letter-spacing: 0.06em;
+}
+
+/* chapter rail — vertical scale / progress decoration */
+.video-rail {
+  position: absolute;
+  right: 42px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(150, 165, 180, 0.35);
+  pointer-events: none;
+}
+.video-rail::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: -12px;
+  bottom: -12px;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(160, 180, 200, 0.18),
+    transparent
+  );
+}
+.video-rail-item {
+  position: relative;
+}
+.video-rail-item.is-current {
+  color: rgba(220, 235, 250, 0.75);
+}
+.video-rail-item.is-current::before {
+  content: '';
+  position: absolute;
+  left: -19px;
+  top: 50%;
+  width: 11px;
+  height: 1px;
+  background: rgba(200, 225, 245, 0.6);
+}
+
+/* ── 5. Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .hero-frame { inset: 10px; }
+
+  .hero-hud-cell { font-size: 8.5px; }
+  .hero-hud-tl { top: 64px; left: 16px; }
+  .hero-hud-bl { bottom: 18px; left: 16px; }
+  .hero-hud-br { display: none; }        /* drop LOG/depth readout  */
+  .hero-hud-coords { display: none; }    /* keep clock only         */
+
+  .leo-mark { width: min(440px, 76vw); }
+
+  .video-rail { display: none; }
+  .home-video-title { letter-spacing: 0.1em; }
+
+  .hero-cue { bottom: 14px; }
+}
+
+/* ── 6. Reduced motion ───────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .leo-mark {
+    animation: none !important;
+  }
+  .lm-g > line,
+  .lm-g > circle {
+    animation: none !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .lm-fadein,
+  .lm-inner {
+    animation: none !important;
+    opacity: var(--lm-o, 1) !important;
+  }
+  .hero-cue {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .hero-hud-dot {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .hero-mark,
+  .home-bg-video {
+    transition: none !important;
+  }
+}

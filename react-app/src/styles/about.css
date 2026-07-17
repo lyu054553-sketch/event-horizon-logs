@@ -1,0 +1,263 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ABOUT PAGE — PERSONNEL DOSSIER · About_Designer scope only
+   Consumes the global design system (index.css); redefines nothing.
+   Concept: deep-space mission crew file, not a résumé card.
+   ─────────────────────────────────────────────────────────────────── */
+
+.about-page {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ── Background layers (photo kept, fade-in preserved) ──────────── */
+.about-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.about-bg.is-loaded {
+  opacity: 1;
+}
+
+/* vignette (kept from original) */
+.about-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(3, 7, 11, 0.7) 100%);
+}
+
+/* extra faint scanlines above the photo (renders after it in DOM) */
+.about-scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(3, 7, 11, 0.05) 3px,
+    rgba(3, 7, 11, 0.05) 4px
+  );
+}
+
+/* ── Layout shell ────────────────────────────────────────────────── */
+.about-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4.5rem;
+}
+
+/* dossier meta bar under the PageHeader */
+.about-dossier-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  margin-bottom: 2.2rem;
+}
+.about-dossier-bar > span:last-child {
+  color: var(--color-accent-dim);
+}
+
+/* two-column dossier grid — desktop */
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 2rem;
+  align-items: start;
+}
+.about-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+/* ── FILE 01 — IDENTITY ──────────────────────────────────────────── */
+.about-identity-body {
+  padding: 1.6rem 1.5rem 1.5rem;
+}
+
+/* LeoMark wrapper — scales the mark without touching the component */
+.about-leo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.about-leo > div {
+  width: 100%;
+  max-width: 340px;
+}
+
+.about-identity-rule {
+  height: 1px;
+  background: var(--color-line);
+  margin-bottom: 1.1rem;
+}
+
+.about-role {
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 0.8rem;
+}
+
+.about-bio {
+  font-size: 12.5px;
+  color: var(--color-muted);
+  line-height: 1.9;
+  margin: 0 0 1.2rem;
+}
+
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.about-tags .tag {
+  cursor: default;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+.about-tags .tag:hover {
+  border-color: var(--color-accent-dim);
+  background: rgba(100, 190, 230, 0.1);
+}
+
+/* ── FILE 02 — SPEC (telemetry) ──────────────────────────────────── */
+.about-spec-rows {
+  padding: 0.4rem 1.2rem 0.6rem;
+}
+.about-spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(154, 178, 199, 0.08);
+}
+.about-spec-row:last-child {
+  border-bottom: none;
+}
+.about-spec-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.about-spec-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--color-text-bright);
+  text-align: right;
+}
+.about-spec-value.is-accent {
+  color: var(--color-accent);
+}
+.about-spec-value.is-ok {
+  color: var(--color-ok);
+}
+
+/* status dot — slow breath, desaturated teal */
+.about-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-ok);
+  box-shadow: 0 0 6px rgba(122, 198, 172, 0.5);
+  animation: aboutDotPulse 3.2s ease-in-out infinite;
+}
+@keyframes aboutDotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* ── FILE 03–05 — terminal modules ───────────────────────────────── */
+.about-term-body {
+  padding: 1.1rem 1.3rem 1.3rem;
+  font-size: 13px;
+  line-height: 1.85;
+}
+.about-term-body p {
+  margin: 0;
+}
+
+/* line-by-line appearance; --line-base set per module, --i per line */
+.about-term-line {
+  opacity: 0;
+  animation: aboutLineIn 0.55s ease forwards;
+  animation-delay: calc(var(--line-base, 0ms) + var(--i, 0) * 60ms);
+}
+@keyframes aboutLineIn {
+  from { opacity: 0; transform: translateX(-4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── record footer ───────────────────────────────────────────────── */
+.about-end-record {
+  text-align: center;
+  margin: 2.6rem 0 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .about-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .about-wrap {
+    padding: 1.8rem 1.1rem 3rem;
+  }
+  .about-dossier-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  .about-identity-body {
+    padding: 1.2rem 1rem 1.1rem;
+  }
+  .about-leo > div {
+    max-width: 250px;
+  }
+  .about-spec-rows {
+    padding: 0.3rem 0.95rem 0.5rem;
+  }
+  .about-spec-row {
+    flex-wrap: wrap;
+    gap: 0.15rem 0.8rem;
+  }
+  .about-term-body {
+    padding: 0.9rem 0.95rem 1.05rem;
+    font-size: 12px;
+  }
+}
+
+/* ── Reduced motion (local safety net on top of the global rule) ── */
+@media (prefers-reduced-motion: reduce) {
+  .about-term-line {
+    animation: none;
+    opacity: 1;
+  }
+  .about-status-dot {
+    animation: none;
+  }
+  .about-bg {
+    transition: none;
+  }
+}

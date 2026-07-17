@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import LetterGlitch from './react-bits/LetterGlitch/LetterGlitch';
 import Navbar from './Navbar';
+import '../styles/chrome.css';
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { t } = useI18n();
@@ -28,23 +29,22 @@ export default function Layout({ children }: { children: ReactNode }) {
       {/* Navbar */}
       <Navbar />
 
-      {/* Page content */}
-      <main style={{ paddingTop: 56, minHeight: '100vh' }}>{children}</main>
+      {/* Page content — keyed wrapper re-triggers the entry transition per route */}
+      <main className="chrome-main">
+        <div key={location.pathname} className="page-transition">
+          {children}
+        </div>
+      </main>
 
       {/* Footer */}
-      <footer
-        style={{
-          padding: '3rem 0 2rem',
-          borderTop: '1px solid var(--color-border)',
-          marginTop: '4rem',
-          textAlign: 'center',
-          fontSize: 10,
-          letterSpacing: 3,
-          color: 'var(--color-muted)',
-          textTransform: 'uppercase',
-        }}
-      >
-        {t('footer')}
+      <footer className="chrome-footer">
+        <div className="chrome-footer-inner">
+          <span className="chrome-footer-text">{t('footer')}</span>
+          <span className="hud chrome-footer-hud">
+            <span className="chrome-status-dot" />
+            {t('chrome.footer.status')}
+          </span>
+        </div>
       </footer>
     </>
   );
