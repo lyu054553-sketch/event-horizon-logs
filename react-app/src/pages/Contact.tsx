@@ -260,7 +260,6 @@ export default function Contact() {
                   <p className="term-output">{t('contact.note2')}</p>
                   <p className="term-output">{t('contact.note3')}</p>
                   <p className="term-output">{t('contact.note4')}</p>
-                  <p className="term-output">{t('contact.note5')}</p>
                   <div className="contact-term-gap" />
                   <p className="term-output contact-note-quote">{t('contact.note6')}</p>
                   <p className="term-output contact-note-quote">{t('contact.note7')}</p>
